@@ -14,14 +14,17 @@ import java.util.List;
 @Table(name = "admins")
 public class Admin {
     @Id
-    private String username;
-    private String password;
+    @Column(name = "username")
+    private String usernameAdmin;
+    @Column(name = "password")
+    private String passwordAdmin;
     @Column(name = "full_name")
     private String fullName;
     private String address;
     @Column(name = "is_admin")
     private Boolean isAdmin;
     private String email;
+    private String phone;
     private String token;
     @Column(name = "token_expired_at")
     private Long tokenExpiredAt;

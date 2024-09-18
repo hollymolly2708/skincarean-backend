@@ -14,10 +14,15 @@ import lombok.Setter;
 @Table(name = "product_images")
 public class ProductImage {
     @Id
-    private String id;
+    @Column(name = "id")
+    private String productImageId;
     @Column(name = "image_url")
     private String imageUrl;
     @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(
+            name = "product_variant_id",
+            referencedColumnName = "id",
+            nullable = false
+    )
     private ProductVariant productVariant;
 }

@@ -14,7 +14,8 @@ import java.util.List;
 @Table(name = "product_variants")
 public class ProductVariant {
     @Id
-    private String id;
+    @Column(name = "id")
+    private String productVariantId;
     private String size;
     private Integer quantity;
     private BigDecimal price;
@@ -22,7 +23,10 @@ public class ProductVariant {
     @Column(name = "original_price")
     private BigDecimal originalPrice;
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(
+            name = "product_id",
+            referencedColumnName = "id",
+            nullable = false)
     private Product product;
     @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> productImages;

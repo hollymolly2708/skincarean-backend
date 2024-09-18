@@ -7,6 +7,7 @@ CREATE TABLE users(
     full_name VARCHAR(100) NOT NULL,
     address TEXT NOT NULL,
     email VARCHAR(100) NOT NULL,
+    phone VARCHAR(100) NOT NULL,
     token VARCHAR(100) UNIQUE,
     token_expired_at BIGINT,
     token_created_at BIGINT,
@@ -15,6 +16,7 @@ CREATE TABLE users(
 );
 
 SELECT * FROM users;
+DELETE FROM users;
 DESC users;
 DROP TABLE users;
 
@@ -24,6 +26,7 @@ CREATE TABLE admins(
     full_name VARCHAR(100) NOT NULL,
     address TEXT NOT NULL,
     is_admin BOOLEAN DEFAULT true,
+    phone VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     token VARCHAR(100) UNIQUE,
     token_expired_at BIGINT,
@@ -32,7 +35,10 @@ CREATE TABLE admins(
     last_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+ALTER TABLE admins DROP COLUMN phone;
+ALTER TABLE admins ADD COLUMN phone VARCHAR(100) NOT NULL;
 SELECT * FROM admins;
+DELETE FROM admins;
 DESC admins;
 DROP TABLE admins;
 
@@ -42,7 +48,7 @@ CREATE TABLE products (
     description TEXT NOT NULL,
     thumbnail_image VARCHAR(255),
     added_by_admin VARCHAR(100),
-    is_promo BOOLEAN DEFAULT FALSE,
+    is_promo BOOLEAN DEFAULT FALSE NOT NULL,
     bpom_code VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -70,9 +76,9 @@ DROP TABLE product_variants;
 
 CREATE TABLE product_images(
     id VARCHAR(100) NOT NULL PRIMARY KEY,
-    variant_id VARCHAR(100) NOT NULL,
+    product_variant_id VARCHAR(100) NOT NULL,
     image_url VARCHAR(255),
-    FOREIGN KEY (variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
+    FOREIGN KEY (product_variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
 );
 
 SELECT * FROM product_images;

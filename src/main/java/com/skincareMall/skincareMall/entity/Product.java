@@ -18,7 +18,8 @@ import java.util.List;
 @Table(name = "products")
 public class Product {
     @Id
-    private String id;
+    @Column(name = "id")
+    private String productId;
     private String name;
     private String description;
     @Column(name = "thumbnail_image")
@@ -32,7 +33,7 @@ public class Product {
     @Column(name = "last_updated_at")
     private Timestamp lastUpdatedAt;
     @ManyToOne
-    @JoinColumn(name = "username", referencedColumnName = "username")
+    @JoinColumn(name = "added_by_admin", referencedColumnName = "username")
     private Admin admin;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> variants;
