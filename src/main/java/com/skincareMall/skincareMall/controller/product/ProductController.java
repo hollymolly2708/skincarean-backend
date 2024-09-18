@@ -1,7 +1,8 @@
 package com.skincareMall.skincareMall.controller.product;
 
 import com.skincareMall.skincareMall.entity.Admin;
-import com.skincareMall.skincareMall.model.product.request.CreateProductRequest;
+import com.skincareMall.skincareMall.model.product.request.ProductRequest;
+import com.skincareMall.skincareMall.model.product.request.ProductCategoryRequest;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.product.ProductService;
@@ -16,8 +17,8 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping(path = "/api/products", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public WebResponse<ProductResponse> createProduct(Admin admin, CreateProductRequest createProductRequest) {
-        ProductResponse productResponse = productService.createProduct(admin, createProductRequest);
+    public WebResponse<ProductResponse> createProduct(Admin admin, ProductRequest productRequest) {
+        ProductResponse productResponse = productService.createProduct(admin, productRequest);
         return WebResponse.<ProductResponse>builder().data(productResponse).build();
 
     }

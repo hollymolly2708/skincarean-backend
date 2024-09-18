@@ -59,7 +59,7 @@ SELECT * FROM products;
 DESC products;
 DROP TABLE products;
 
-CREATE TABLE product_variants(
+CREATE TABLE product_categories(
     id VARCHAR(100) NOT NULL PRIMARY KEY,
     product_id VARCHAR(100) NOT NULL,
     size VARCHAR(100) NOT NULL,
@@ -70,15 +70,15 @@ CREATE TABLE product_variants(
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
-SELECT * FROM product_variants;
-DESC product_variants;
-DROP TABLE product_variants;
+SELECT * FROM product_categories;
+DESC product_categories;
+DROP TABLE product_categories;
 
 CREATE TABLE product_images(
     id VARCHAR(100) NOT NULL PRIMARY KEY,
-    product_variant_id VARCHAR(100) NOT NULL,
+    product_categories_id VARCHAR(100) NOT NULL,
     image_url VARCHAR(255),
-    FOREIGN KEY (product_variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
+    FOREIGN KEY (product_categories_id) REFERENCES product_categories(id) ON DELETE CASCADE
 );
 
 SELECT * FROM product_images;

@@ -12,12 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "product_variants")
-public class ProductVariant {
+public class ProductCategory {
     @Id
     @Column(name = "id")
     private String productVariantId;
     private String size;
-    private Integer quantity;
+    private Long quantity;
     private BigDecimal price;
     private BigDecimal discount;
     @Column(name = "original_price")
@@ -28,7 +28,7 @@ public class ProductVariant {
             referencedColumnName = "id",
             nullable = false)
     private Product product;
-    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> productImages;
 
 }

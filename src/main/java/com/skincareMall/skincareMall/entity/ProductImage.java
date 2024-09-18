@@ -24,5 +24,5 @@ public class ProductImage {
             referencedColumnName = "id",
             nullable = false
     )
-    private ProductVariant productVariant;
+    private ProductCategory productCategory;
 }

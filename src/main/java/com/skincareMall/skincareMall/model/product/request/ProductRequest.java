@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CreateProductRequest {
+public class ProductRequest {
     @Size(max = 100)
     @NotBlank
     private String productName;
@@ -25,5 +25,4 @@ public class CreateProductRequest {
     @Size(max = 100)
     @NotBlank
     private String bpomCode;
-
 }

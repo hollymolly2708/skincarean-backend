@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -36,5 +35,5 @@ public class Product {
     @JoinColumn(name = "added_by_admin", referencedColumnName = "username")
     private Admin admin;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductVariant> variants;
+    private List<ProductCategory> variants;
 }
