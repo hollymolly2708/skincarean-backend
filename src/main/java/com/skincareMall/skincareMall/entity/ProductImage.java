@@ -20,7 +20,7 @@ public class ProductImage {
     private String imageUrl;
     @ManyToOne
     @JoinColumn(
-            name = "product_variant_id",
+            name = "product_categories_id",
             referencedColumnName = "id",
             nullable = false
     )

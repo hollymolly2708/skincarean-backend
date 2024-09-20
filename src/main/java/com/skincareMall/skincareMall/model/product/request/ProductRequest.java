@@ -25,4 +25,5 @@ public class ProductRequest {
     @Size(max = 100)
     @NotBlank
     private String bpomCode;
+
 }

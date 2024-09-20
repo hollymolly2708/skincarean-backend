@@ -10,8 +10,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-@Table(name = "product_variants")
+@Table(name = "product_categories")
 public class ProductCategory {
     @Id
     @Column(name = "id")
