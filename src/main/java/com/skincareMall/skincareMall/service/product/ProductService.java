@@ -5,7 +5,6 @@ import com.skincareMall.skincareMall.entity.Product;
 import com.skincareMall.skincareMall.entity.ProductCategory;
 import com.skincareMall.skincareMall.model.product.request.ProductCategoryRequest;
 import com.skincareMall.skincareMall.model.product.request.ProductRequest;
-import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import com.skincareMall.skincareMall.repository.ProductCategoryRepository;
 import com.skincareMall.skincareMall.repository.ProductRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
@@ -13,8 +12,7 @@ import com.skincareMall.skincareMall.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.UUID;
 
 @Service
@@ -27,9 +25,10 @@ public class ProductService {
     private ProductCategoryRepository productCategoryRepository;
 
     @Transactional
-    public ProductResponse createProduct(Admin admin, ProductRequest productRequest, List<ProductCategoryRequest> listProductCategoryRequest) {
+    public void createProduct(Admin admin, ProductRequest productRequest) {
         validationService.validate(productRequest);
 
+        // Membuat dan menyimpan product terlebih dahulu
         Product product = new Product();
         product.setAdmin(admin);
         product.setProductId(UUID.randomUUID().toString());
@@ -41,29 +40,20 @@ public class ProductService {
         product.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
         product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
 
-        List<ProductCategory> categories = new ArrayList<>();
-
-        for (ProductCategoryRequest request : listProductCategoryRequest) {
-            validationService.validate(request);
-            ProductCategory productCategory = new ProductCategory();
-            productCategory.setProduct(product);
-            productCategory.setPrice(request.getPrice());
-            productCategory.setDiscount(request.getDiscount());
-            productCategory.setQuantity(request.getQuantity());
-            productCategory.setOriginalPrice(request.getOriginalPrice());
-            productCategory.setSize(request.getSize());
-            categories.add(productCategory);
-            productCategoryRepository.save(productCategory);
-
-        }
+        // Simpan product dan ambil kembali untuk memastikan ID sudah di-set
         productRepository.save(product);
-        return ProductResponse.builder()
-                .productDescription(product.getDescription())
-                .productName(product.getName())
-                .isPromo(product.getIsPromo())
-                .thumbnailImage(product.getThumbnailImage())
-                .addedByAdmin(product.getAdmin().getUsernameAdmin())
-                .build();
+
+        // Membuat dan menyimpan ProductCategory yang terkait
+        for (ProductCategoryRequest categoryRequest : productRequest.getProductCategoryRequest()) {
+            ProductCategory productCategory = new ProductCategory();
+            productCategory.setQuantity(categoryRequest.getQuantity());
+            productCategory.setProduct(product); // Referensi ke product yang sudah disimpan
+            productCategory.setSize(categoryRequest.getSize());
+            productCategory.setDiscount(categoryRequest.getDiscount());
+            productCategory.setPrice(categoryRequest.getPrice());
+            productCategory.setOriginalPrice(categoryRequest.getOriginalPrice());
+            productCategoryRepository.save(productCategory);
+        }
     }
 
 

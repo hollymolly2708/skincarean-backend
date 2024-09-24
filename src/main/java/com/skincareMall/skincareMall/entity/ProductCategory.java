@@ -15,8 +15,9 @@ import java.util.List;
 @Table(name = "product_categories")
 public class ProductCategory {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private String productVariantId;
+    private Long productCategoryId;
     private String size;
     private Long quantity;
     private BigDecimal price;
