@@ -64,11 +64,24 @@ public class ProductService {
 
     }
 
+    private ProductResponse toProductResponse(Product product){
+        return ProductResponse.builder()
+                .productName(product.getName())
+                .productDescription(product.getDescription())
+                .isPromo(product.getIsPromo())
+                .bpomCode(product.getBpomCode())
+                .originalPrice(product.getOriginalPrice())
+                .price(product.getPrice())
+                .size(product.getSize())
+                .discount(product.getDiscount())
+                .thumbnailImage(product.getThumbnailImage())
+                .build();
+    }
 
-    public getAllProducts(){
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
-
-
+     return  products.stream().map(this::toProductResponse).toList();
     }
 
 }
