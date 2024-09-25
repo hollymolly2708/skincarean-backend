@@ -19,7 +19,7 @@ import java.util.List;
 public class Product {
     @Id
     @Column(name = "id")
-    private String productId;
+    private String id;
 
     private String name;
 

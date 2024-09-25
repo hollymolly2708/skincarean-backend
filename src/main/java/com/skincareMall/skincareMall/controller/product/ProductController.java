@@ -1,19 +1,17 @@
 package com.skincareMall.skincareMall.controller.product;
 
 import com.skincareMall.skincareMall.entity.Admin;
-import com.skincareMall.skincareMall.entity.Product;
 import com.skincareMall.skincareMall.model.product.request.ProductRequest;
+import com.skincareMall.skincareMall.model.product.request.UpdateProductRequest;
 import com.skincareMall.skincareMall.model.product.response.DetailProductResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ProductController {
@@ -37,8 +35,20 @@ public class ProductController {
     }
 
     @GetMapping(path = "/api/products/{productId}")
-    public WebResponse<DetailProductResponse> getDetailProduct(@PathVariable String productId){
+    public WebResponse<DetailProductResponse> getDetailProduct(@PathVariable("productId") String productId){
         DetailProductResponse detailProduct = productService.getDetailProduct(productId);
         return WebResponse.<DetailProductResponse>builder().data(detailProduct).build();
+    }
+
+    @DeleteMapping(path = "/api/products/{productId}")
+    public WebResponse<String> deleteProductById(Admin admin, @PathVariable("productId") String productId){
+        productService.deleteProductById(productId);
+        return WebResponse.<String>builder().data("Product berhasil dihapus").build();
+    }
+
+    @PatchMapping (path = "/api/products/{productId}" )
+    public WebResponse<DetailProductResponse> updateProductById(@PathVariable("productId") String productId, @RequestBody UpdateProductRequest updateProductRequest, Admin admin){
+        DetailProductResponse updateDetailProductResponse = productService.updateProduct(admin, productId, updateProductRequest);
+        return WebResponse.<DetailProductResponse>builder().data(updateDetailProductResponse).build();
     }
 }

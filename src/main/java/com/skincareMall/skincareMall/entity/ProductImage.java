@@ -1,22 +1,20 @@
 package com.skincareMall.skincareMall.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "product_images")
 public class ProductImage {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productImageId;
+    private Long id;
     @Column(name = "image_url")
     private String imageUrl;
     @ManyToOne

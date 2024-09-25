@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductImageRepository extends JpaRepository<ProductImage, String> {
-    List<ProductImage> findAllByProductProductId(String productId);
+public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
+    List<ProductImage> findAllByProductId(String productId);
+    Optional<ProductImage> findByIdAndProductId(Long id, String productId);
 }
