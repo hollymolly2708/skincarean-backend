@@ -1,13 +1,12 @@
 package com.skincareMall.skincareMall.model.product.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Builder
@@ -28,7 +27,23 @@ public class ProductRequest {
     @Size(max = 100)
     @NotBlank
     private String bpomCode;
+    @Size(max = 100)
+    @NotBlank
+    private String size;
     @NotNull
-    private List<ProductVariantRequest> productVariants;
+    @Digits(integer = 20, fraction = 2, message = "Harga harus berupa angka dengan maksimal 20 digit dan 2 desimal")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Harga harus lebih besar dari 0.0")
+    private BigDecimal price;
+    @NotNull
+    @Digits(integer = 2, fraction = 0, message = "Discount harus berupa angka dengan maksimal 2 digit dan 0 desimal")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Harga harus lebih besar dari 0.0")
+    private BigDecimal discount;
+    @NotNull
+    @Digits(integer = 20, fraction = 2, message = "Harga harus berupa angka dengan maksimal 20 digit dan 2 desimal")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Harga harus lebih besar dari 0.0")
+    private BigDecimal originalPrice;
+    private Long quantity;
+    @NotNull
+    private List<ProductImageRequest> productImage;
 
 }

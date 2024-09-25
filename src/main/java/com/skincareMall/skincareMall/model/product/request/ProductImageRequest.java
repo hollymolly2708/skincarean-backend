@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class ProductVariantImageRequest {
+public class ProductImageRequest {
     private String imageUrl;
 }

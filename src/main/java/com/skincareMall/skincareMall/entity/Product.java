@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -18,22 +19,43 @@ import java.util.List;
 public class Product {
     @Id
     @Column(name = "id")
+
     private String productId;
+
     private String name;
+
     private String description;
+
     @Column(name = "thumbnail_image")
     private String thumbnailImage;
+
     @Column(name = "bpom_code")
     private String bpomCode;
+
     @Column(name = "is_promo")
     private Boolean isPromo;
+
+    private String size;
+
+    private Long quantity;
+
+    private BigDecimal price;
+
+    private BigDecimal discount;
+
+    @Column(name = "original_price")
+    private BigDecimal originalPrice;
+
     @Column(name = "created_at")
     private Timestamp createdAt;
+
     @Column(name = "last_updated_at")
     private Timestamp lastUpdatedAt;
+
     @ManyToOne
     @JoinColumn(name = "added_by_admin", referencedColumnName = "username")
     private Admin admin;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<productVariant> variants;
+    private List<ProductImage> productImages;
 }

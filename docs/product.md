@@ -18,31 +18,15 @@ Request Body :
   "thumbnail_image": "skintific.jpeg",
   "is_promo": true,
   "bpom_code": "NA11230100349",
-  "variants": [
-    {
-      "size": "30g",
-      "price": "107.940",
-      "discount": 30,
-      "original_price": "154.000",
-      "quantity": 30,
-      "product_image": [
-        "skintific1.jpeg",
-        "skintific2.jpeg",
-        "skintific3.jpeg"
-      ]
-    },
-    {
-      "size": "15g",
-      "price": "60.720",
-      "discount": 30,
-      "original_price": "110.000",
-      "quantity": 30,
-      "product_image": [
-        "skintific15.jpeg",
-        "skintific15.jpeg",
-        "skintific15.jpeg"
-      ]
-    }
+  "size": "30g",
+  "price": "107.940",
+  "discount": 30,
+  "original_price": "154.000",
+  "quantity": 30,
+  "product_image": [
+    "skintific1.jpeg",
+    "skintific2.jpeg",
+    "skintific3.jpeg"
   ]
 }
 
@@ -86,24 +70,11 @@ Response Body (Success):
       "thumbnail_image": "skintific.jpeg",
       "is_promo": true,
       "bpom_code": "NA11230100349",
-     
-      "price_range": {
-        "min": {
-          "price": "60.720",
-          // Harga setelah diskon terendah
-          "discount": 30,
-          "original_price": "110.000"
-          // Harga asli terendah
-        },
-        "max": {
-          "price": "107.940",
-          "discount": 40,
-          // Harga setelah diskon tertinggi
-          "original_price": "154.000"
-          // Harga asli tertinggi
-        }
+      "price": "107.940",
+      "discount": 30,
+      "original_price": "154.000"
       }
-    }
+    
   ]
 }
 
@@ -138,31 +109,15 @@ Response Body (Success):
       "thumbnail_image": "skintific.jpeg",
       "is_promo": true,
       "bpom_code": "NA11230100349",
-      "variants": [
-        {
-          "size": "30g",
-          "price": "107.940",
-          "discount": 30,
-          "original_price": "154.000",
-          "quantity": 30,
-          "product_image": [
-            "skintific1.jpeg",
-            "skintific2.jpeg",
-            "skintific3.jpeg"
-          ]
-        },
-        {
-          "size": "15g",
-          "price": "60.720",
-          "discount": 40,
-          "original_price": "110.000",
-          "quantity": 30,
-          "product_image": [
-            "skintific15.jpeg",
-            "skintific15.jpeg",
-            "skintific15.jpeg"
-          ]
-        }
+      "size": "30g",
+      "price": "107.940",
+      "discount": 30,
+      "original_price": "154.000",
+      "quantity": 30,
+      "product_image": [
+        "skintific1.jpeg",
+        "skintific2.jpeg",
+        "skintific3.jpeg"
       ]
     }
   ]
@@ -205,23 +160,17 @@ Response Body (Success) :
       "thumbnail_image": "skintific.jpeg",
       "is_promo": true,
       "bpom_code": "NA11230100349",
-   
-      "price_range": {
-        "min": {
-          "price": "60.720",
-          "discount": 30,
-          // Harga setelah diskon terendah
-          "original_price": "110.000"
-          // Harga asli terendah
-        },
-        "max": {
-          "price": "107.940",
-          "discount": 40,
-          // Harga setelah diskon tertinggi
-          "original_price": "154.000"
-          // Harga asli tertinggi
-        }
-      }
+      "size": "30g",
+      "price": "107.940",
+      "discount": 30,
+      "original_price": "154.000",
+      "quantity": 30,
+      "product_image": [
+        "skintific1.jpeg",
+        "skintific2.jpeg",
+        "skintific3.jpeg"
+      ]
+      
     }
   ],
   "paging": {
@@ -263,31 +212,15 @@ Response Body (Success) :
       "thumbnail_image": "skintific.jpeg",
       "is_promo": true,
       "bpom_code": "NA11230100349",
-      "variants": [
-        {
-          "size": "30g",
-          "price": "107.940",
-          "discount": 30,
-          "original_price": "154.000",
-          "quantity": 30,
-          "product_image": [
-            "skintific1.jpeg",
-            "skintific2.jpeg",
-            "skintific3.jpeg"
-          ]
-        },
-        {
-          "size": "15g",
-          "price": "60.720",
-          "discount": 30,
-          "original_price": "110.000",
-          "quantity": 30,
-          "product_image": [
-            "skintific15.jpeg",
-            "skintific15.jpeg",
-            "skintific15.jpeg"
-          ]
-        }
+      "size": "30g",
+      "price": "107.940",
+      "discount": 30,
+      "original_price": "154.000",
+      "quantity": 30,
+      "product_image": [
+        "skintific1.jpeg",
+        "skintific2.jpeg",
+        "skintific3.jpeg"
       ]
     }
   ]

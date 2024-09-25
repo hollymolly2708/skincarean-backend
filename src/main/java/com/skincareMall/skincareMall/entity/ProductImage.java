@@ -11,19 +11,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "product_variant_images")
-public class ProductVariantImage {
+@Table(name = "product_images")
+public class ProductImage {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productVariantImageId;
+    private Long productImageId;
     @Column(name = "image_url")
     private String imageUrl;
     @ManyToOne
     @JoinColumn(
-            name = "product_variants_id",
+            name = "product_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private productVariant productVariant;
+    private Product product;
 }
