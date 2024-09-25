@@ -19,7 +19,6 @@ import java.util.List;
 public class Product {
     @Id
     @Column(name = "id")
-
     private String productId;
 
     private String name;
@@ -42,6 +41,9 @@ public class Product {
     private BigDecimal price;
 
     private BigDecimal discount;
+
+    private String category;
+    private String brands;
 
     @Column(name = "original_price")
     private BigDecimal originalPrice;

@@ -32,6 +32,9 @@ public class AdminAuthService {
         if (adminRepository.existsById(registerAdminRequest.getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already registered");
         }
+        if(!Objects.equals(registerAdminRequest.getPassword(), registerAdminRequest.getConfirmPassword())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "password and confirm password is'nt equals");
+        }
 
         Admin admin = new Admin();
         admin.setAddress(registerAdminRequest.getAddress());
@@ -51,9 +54,6 @@ public class AdminAuthService {
     public TokenResponse loginAdmin(LoginAdminRequest loginAdminRequest) {
         validationService.validate(loginAdminRequest);
         Admin admin = adminRepository.findById(loginAdminRequest.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username or password is wrong"));
-        if (!Objects.equals(loginAdminRequest.getPassword(), loginAdminRequest.getConfirmPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "username or password is wrong");
-        }
 
         if (BCrypt.checkpw(loginAdminRequest.getPassword(), admin.getPasswordAdmin())) {
             admin.setToken(UUID.randomUUID().toString());

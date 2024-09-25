@@ -31,4 +31,7 @@ public class RegisterAdminRequest {
     @NotBlank
     private String email;
     private Boolean isAdmin;
+    @Size(max = 100)
+    @NotBlank
+    private String confirmPassword;
 }

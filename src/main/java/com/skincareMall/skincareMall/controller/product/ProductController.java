@@ -1,18 +1,19 @@
 package com.skincareMall.skincareMall.controller.product;
 
 import com.skincareMall.skincareMall.entity.Admin;
+import com.skincareMall.skincareMall.entity.Product;
 import com.skincareMall.skincareMall.model.product.request.ProductRequest;
+import com.skincareMall.skincareMall.model.product.response.DetailProductResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ProductController {
@@ -33,5 +34,11 @@ public class ProductController {
     public  WebResponse<List<ProductResponse>> getAllProducts(){
         List<ProductResponse> allProducts = productService.getAllProducts();
         return WebResponse.<List<ProductResponse>>builder().data(allProducts).build();
+    }
+
+    @GetMapping(path = "/api/products/{productId}")
+    public WebResponse<DetailProductResponse> getDetailProduct(@PathVariable String productId){
+        DetailProductResponse detailProduct = productService.getDetailProduct(productId);
+        return WebResponse.<DetailProductResponse>builder().data(detailProduct).build();
     }
 }

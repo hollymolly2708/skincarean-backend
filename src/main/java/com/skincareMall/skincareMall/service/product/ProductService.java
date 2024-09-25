@@ -5,17 +5,23 @@ import com.skincareMall.skincareMall.entity.Product;
 import com.skincareMall.skincareMall.entity.ProductImage;
 import com.skincareMall.skincareMall.model.product.request.ProductImageRequest;
 import com.skincareMall.skincareMall.model.product.request.ProductRequest;
+import com.skincareMall.skincareMall.model.product.response.DetailProductResponse;
+import com.skincareMall.skincareMall.model.product.response.ProductImageResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import com.skincareMall.skincareMall.repository.ProductImageRepository;
 import com.skincareMall.skincareMall.repository.ProductRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -42,7 +48,9 @@ public class ProductService {
         product.setBpomCode(productRequest.getBpomCode());
         product.setSize(productRequest.getSize());
         product.setQuantity(productRequest.getQuantity());
+        product.setBrands(productRequest.getBrands());
         product.setPrice(productRequest.getPrice());
+        product.setCategory(productRequest.getCategory());
         product.setOriginalPrice(productRequest.getOriginalPrice());
         product.setDiscount(productRequest.getDiscount());
         product.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
@@ -53,7 +61,6 @@ public class ProductService {
 
         if (productRequest.getProductImage() != null) {
             // Membuat dan menyimpan ProductCategory yang terkait
-
             for (ProductImageRequest productImageRequest : productRequest.getProductImage()) {
                 ProductImage productImage = new ProductImage();
                 productImage.setImageUrl(productImageRequest.getImageUrl());
@@ -64,14 +71,18 @@ public class ProductService {
 
     }
 
-    private ProductResponse toProductResponse(Product product){
+    private ProductResponse toProductResponse(Product product) {
         return ProductResponse.builder()
+                .productId(product.getProductId())
                 .productName(product.getName())
                 .productDescription(product.getDescription())
                 .isPromo(product.getIsPromo())
                 .bpomCode(product.getBpomCode())
                 .originalPrice(product.getOriginalPrice())
                 .price(product.getPrice())
+                .quantity(product.getQuantity())
+                .brands(product.getBrands())
+                .category(product.getCategory())
                 .size(product.getSize())
                 .discount(product.getDiscount())
                 .thumbnailImage(product.getThumbnailImage())
@@ -81,7 +92,42 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
-     return  products.stream().map(this::toProductResponse).toList();
+        return products.stream().map(product -> toProductResponse(product)).toList();
     }
+
+    private ProductImageResponse toProducImageResponse(ProductImage productImage) {
+        return ProductImageResponse.builder()
+                .id(productImage.getProductImageId())
+                .imageUrl(productImage.getImageUrl())
+                .build();
+    }
+
+
+    @Transactional(readOnly = true)
+    public DetailProductResponse getDetailProduct(String productId) {
+        List<ProductImageResponse> productImageResponses = productImageRepository.findAllByProductProductId(productId)
+                .stream()
+                .map(productImage -> toProducImageResponse(productImage))
+                .toList();
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product is not found"));
+
+        return DetailProductResponse.builder()
+                .productId(product.getProductId())
+                .productImage(productImageResponses)
+                .productName(product.getName())
+                .productDescription(product.getDescription())
+                .price(product.getPrice())
+                .bpomCode(product.getBpomCode())
+                .category(product.getCategory())
+                .brands(product.getBrands())
+                .isPromo(product.getIsPromo())
+                .quantity(product.getQuantity())
+                .originalPrice(product.getOriginalPrice())
+                .thumbnailImage(product.getThumbnailImage())
+                .size(product.getSize())
+                .discount(product.getDiscount())
+                .build();
+    }
+
 
 }

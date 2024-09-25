@@ -1,5 +1,6 @@
 package com.skincareMall.skincareMall.model.product.response;
 
+import com.skincareMall.skincareMall.entity.ProductImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductResponse {
+public class DetailProductResponse {
     private String productId;
     private String productName;
     private String productDescription;
@@ -26,4 +27,5 @@ public class ProductResponse {
     private BigDecimal discount;
     private String brands;
     private String category;
+    private List<ProductImageResponse> productImage;
 }

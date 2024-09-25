@@ -20,10 +20,16 @@ public class ProductRequest {
     @Size(max = 100)
     @NotBlank
     private String productDescription;
-    @Size(max = 100)
+    @Size(max = 255)
     @NotBlank
     private String thumbnailImage;
     private Boolean isPromo;
+    @NotBlank
+    @Size(max = 100)
+    private String brands;
+    @NotBlank
+    @Size(max = 100)
+    private String category;
     @Size(max = 100)
     @NotBlank
     private String bpomCode;
