@@ -2,10 +2,13 @@ package com.skincareMall.skincareMall.service.product;
 
 import com.skincareMall.skincareMall.entity.Admin;
 import com.skincareMall.skincareMall.entity.Product;
-import com.skincareMall.skincareMall.entity.ProductCategory;
-import com.skincareMall.skincareMall.model.product.request.ProductCategoryRequest;
+import com.skincareMall.skincareMall.entity.productVariant;
+import com.skincareMall.skincareMall.entity.ProductVariantImage;
+import com.skincareMall.skincareMall.model.product.request.ProductVariantRequest;
+import com.skincareMall.skincareMall.model.product.request.ProductVariantImageRequest;
 import com.skincareMall.skincareMall.model.product.request.ProductRequest;
-import com.skincareMall.skincareMall.repository.ProductCategoryRepository;
+import com.skincareMall.skincareMall.repository.ProductVariantRepository;
+import com.skincareMall.skincareMall.repository.ProductVariantImageRepository;
 import com.skincareMall.skincareMall.repository.ProductRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
@@ -22,7 +25,10 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private ProductCategoryRepository productCategoryRepository;
+    private ProductVariantRepository productVariantRepository;
+
+    @Autowired
+    private ProductVariantImageRepository productVariantImageRepository;
 
     @Transactional
     public void createProduct(Admin admin, ProductRequest productRequest) {
@@ -43,18 +49,34 @@ public class ProductService {
         // Simpan product dan ambil kembali untuk memastikan ID sudah di-set
         productRepository.save(product);
 
-        // Membuat dan menyimpan ProductCategory yang terkait
-        for (ProductCategoryRequest categoryRequest : productRequest.getProductCategoryRequest()) {
-            ProductCategory productCategory = new ProductCategory();
-            productCategory.setQuantity(categoryRequest.getQuantity());
-            productCategory.setProduct(product); // Referensi ke product yang sudah disimpan
-            productCategory.setSize(categoryRequest.getSize());
-            productCategory.setDiscount(categoryRequest.getDiscount());
-            productCategory.setPrice(categoryRequest.getPrice());
-            productCategory.setOriginalPrice(categoryRequest.getOriginalPrice());
-            productCategoryRepository.save(productCategory);
+        if (productRequest.getProductVariants() != null) {
+            // Membuat dan menyimpan ProductCategory yang terkait
+            for (ProductVariantRequest variantRequest : productRequest.getProductVariants()) {
+                productVariant productVariant = new productVariant();
+                productVariant.setQuantity(variantRequest.getQuantity());
+                productVariant.setProduct(product); // Referensi ke product yang sudah disimpan
+                productVariant.setSize(variantRequest.getSize());
+                productVariant.setDiscount(variantRequest.getDiscount());
+                productVariant.setPrice(variantRequest.getPrice());
+                productVariant.setOriginalPrice(variantRequest.getOriginalPrice());
+                productVariantRepository.save(productVariant);
+
+                if (variantRequest.getProductVariantImages() != null) {
+                    for (ProductVariantImageRequest productVariantImageRequest : variantRequest.getProductVariantImages()) {
+                        ProductVariantImage productVariantImage = new ProductVariantImage();
+                        productVariantImage.setProductVariant(productVariant);
+                        productVariantImage.setImageUrl(productVariantImageRequest.getImageUrl());
+                        productVariantImageRepository.save(productVariantImage);
+                    }
+                }
+            }
         }
+
     }
 
+
+//    public List<ProductResponse> getAllProducts(){
+//
+//    }
 
 }

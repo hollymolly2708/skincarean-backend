@@ -35,5 +35,5 @@ public class Product {
     @JoinColumn(name = "added_by_admin", referencedColumnName = "username")
     private Admin admin;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductCategory> categories;
+    private List<productVariant> variants;
 }

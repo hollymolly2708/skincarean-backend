@@ -2,7 +2,6 @@ package com.skincareMall.skincareMall.controller.product;
 
 import com.skincareMall.skincareMall.entity.Admin;
 import com.skincareMall.skincareMall.model.product.request.ProductRequest;
-import com.skincareMall.skincareMall.model.product.request.ProductCategoryRequest;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,4 +24,9 @@ public class ProductController {
         return WebResponse.<String>builder().data("Product berhasil ditambahkan").build();
 
     }
+
+//    @GetMapping(path = "/api/products")
+//    public  WebResponse<List<ProductResponse>> getAllProducts(){
+//
+//    }
 }

@@ -9,12 +9,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductCategoryRequest {
+public class ProductVariantRequest {
     @Size(max = 100)
     @NotBlank
     private String size;
@@ -27,5 +28,6 @@ public class ProductCategoryRequest {
     @Size(max = 100)
     @NotBlank
     private Long quantity;
+    private List<ProductVariantImageRequest> productVariantImages;
 
 }
