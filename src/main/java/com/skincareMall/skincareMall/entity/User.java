@@ -4,6 +4,7 @@ package com.skincareMall.skincareMall.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,4 +33,6 @@ public class User {
     @Column(name = "token_created_at")
     private Long tokenCreatedAt;
     private String phone;
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 }
