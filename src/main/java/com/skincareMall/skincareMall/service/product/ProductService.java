@@ -4,25 +4,26 @@ import com.skincareMall.skincareMall.entity.Admin;
 import com.skincareMall.skincareMall.entity.Product;
 import com.skincareMall.skincareMall.entity.ProductImage;
 import com.skincareMall.skincareMall.mapper.ProductMapper;
-import com.skincareMall.skincareMall.model.product.request.ProductImageRequest;
-import com.skincareMall.skincareMall.model.product.request.ProductRequest;
-import com.skincareMall.skincareMall.model.product.request.UpdateProductImageRequest;
-import com.skincareMall.skincareMall.model.product.request.UpdateProductRequest;
+import com.skincareMall.skincareMall.model.product.request.*;
 import com.skincareMall.skincareMall.model.product.response.*;
 import com.skincareMall.skincareMall.repository.ProductImageRepository;
 import com.skincareMall.skincareMall.repository.ProductRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
+
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.skincareMall.skincareMall.mapper.ProductMapper.*;
@@ -76,13 +77,11 @@ public class ProductService {
     }
 
 
-
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(product -> toProductResponse(product)).toList();
     }
-
 
 
     @Transactional(readOnly = true)
@@ -135,8 +134,8 @@ public class ProductService {
         if (Objects.nonNull(productRequest.getProductImages())) {
 //            List<ProductImage> productImages = productRequest.getProductImages().stream().map(productImageRequest -> toProductImage(productImageRequest)).toList();
             for (UpdateProductImageRequest updateProductImageRequest : productRequest.getProductImages()) {
-                ProductImage productImageByIdAndProductId = productImageRepository.findByIdAndProductId(updateProductImageRequest.getId(), productId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is not found"));
-                if(productImageByIdAndProductId != null){
+                ProductImage productImageByIdAndProductId = productImageRepository.findByIdAndProductId(updateProductImageRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is not found"));
+                if (productImageByIdAndProductId != null) {
                     productImageByIdAndProductId.setImageUrl(updateProductImageRequest.getImageUrl());
                     productImageRepository.save(productImageByIdAndProductId);
                 }
@@ -167,6 +166,24 @@ public class ProductService {
         productRepository.save(product);
         List<ProductImageResponse> productImageResponse = product.getProductImages().stream().map(productImage -> toProductImageResponse(productImage)).toList();
         return toDetailProductResponse(product, productImageResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> search(SearchProductRequest searchProductRequest) {
+        System.out.println(searchProductRequest.getName());
+        Specification<Product> specification = (root, query, criteriaBuilder) -> {
+
+            System.out.println(searchProductRequest.getName());
+            List<Predicate> predicates = new ArrayList<>();
+            if (Objects.nonNull(searchProductRequest.getName()) && !searchProductRequest.getName().isEmpty()) {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + searchProductRequest.getName() + "%"));
+            }
+            return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
+        };
+        Pageable pageable = PageRequest.of(searchProductRequest.getPage(), searchProductRequest.getSize());
+        Page<Product> products = productRepository.findAll(specification, pageable);
+        List<ProductResponse> productResponses = products.getContent().stream().map(product -> toProductResponse(product)).toList();
+        return new PageImpl<>(productResponses, pageable, products.getTotalElements());
     }
 
 
