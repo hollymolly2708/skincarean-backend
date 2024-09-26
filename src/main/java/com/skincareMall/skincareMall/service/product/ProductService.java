@@ -3,7 +3,6 @@ package com.skincareMall.skincareMall.service.product;
 import com.skincareMall.skincareMall.entity.Admin;
 import com.skincareMall.skincareMall.entity.Product;
 import com.skincareMall.skincareMall.entity.ProductImage;
-import com.skincareMall.skincareMall.mapper.ProductMapper;
 import com.skincareMall.skincareMall.model.product.request.*;
 import com.skincareMall.skincareMall.model.product.response.*;
 import com.skincareMall.skincareMall.repository.ProductImageRepository;
@@ -23,8 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.skincareMall.skincareMall.mapper.ProductMapper.*;
 
@@ -39,36 +38,38 @@ public class ProductService {
     private ProductImageRepository productImageRepository;
 
     @Transactional
-    public void createProduct(Admin admin, ProductRequest productRequest) {
-        validationService.validate(productRequest);
+    public void createProduct(Admin admin, CreateProductRequest createProductRequest) {
+        validationService.validate(createProductRequest);
 
         // Membuat dan menyimpan product terlebih dahulu
         Product product = new Product();
+        BigDecimal requestOriginalPrice = createProductRequest.getOriginalPrice();
+        BigDecimal requestDiscount = createProductRequest.getDiscount();
         product.setAdmin(admin);
         product.setId(UUID.randomUUID().toString());
-        product.setThumbnailImage(productRequest.getThumbnailImage());
-        product.setName(productRequest.getProductName());
-        product.setDescription(productRequest.getProductDescription());
-        product.setIsPromo(productRequest.getIsPromo());
-        product.setBpomCode(productRequest.getBpomCode());
-        product.setSize(productRequest.getSize());
-        product.setQuantity(productRequest.getQuantity());
-        product.setBrands(productRequest.getBrands());
-        product.setPrice(productRequest.getPrice());
-        product.setCategory(productRequest.getCategory());
-        product.setOriginalPrice(productRequest.getOriginalPrice());
-        product.setDiscount(productRequest.getDiscount());
+        product.setThumbnailImage(createProductRequest.getThumbnailImage());
+        product.setName(createProductRequest.getProductName());
+        product.setDescription(createProductRequest.getProductDescription());
+        product.setIsPromo(createProductRequest.getIsPromo());
+        product.setBpomCode(createProductRequest.getBpomCode());
+        product.setSize(createProductRequest.getSize());
+        product.setStok(createProductRequest.getStok());
+        product.setBrands(createProductRequest.getBrands());
+        product.setPrice(requestOriginalPrice.subtract(requestOriginalPrice.multiply(requestDiscount.divide(BigDecimal.valueOf(100)))));
+        product.setCategory(createProductRequest.getCategory());
+        product.setOriginalPrice(createProductRequest.getOriginalPrice());
+        product.setDiscount(createProductRequest.getDiscount());
         product.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
         product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
 
         // Simpan product dan ambil kembali untuk memastikan ID sudah di-set
         productRepository.save(product);
 
-        if (productRequest.getProductImages() != null) {
+        if (createProductRequest.getProductImages() != null) {
             // Membuat dan menyimpan ProductCategory yang terkait
-            for (ProductImageRequest productImageRequest : productRequest.getProductImages()) {
+            for (CreateProductImageRequest createProductImageRequest : createProductRequest.getProductImages()) {
                 ProductImage productImage = new ProductImage();
-                productImage.setImageUrl(productImageRequest.getImageUrl());
+                productImage.setImageUrl(createProductImageRequest.getImageUrl());
                 productImage.setProduct(product);
                 productImageRepository.save(productImage);
             }
@@ -121,6 +122,7 @@ public class ProductService {
         }
         if (Objects.nonNull(productRequest.getDiscount())) {
             product.setDiscount(productRequest.getDiscount());
+            product.setPrice(productRequest.getOriginalPrice().subtract(productRequest.getOriginalPrice().multiply(productRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
             System.out.println(productRequest.getDiscount());
         }
         if (Objects.nonNull(productRequest.getBrands())) {
@@ -143,10 +145,7 @@ public class ProductService {
             }
             System.out.println(productRequest.getProductImages());
         }
-        if (Objects.nonNull(productRequest.getPrice())) {
-            product.setPrice(productRequest.getPrice());
-            System.out.println(productRequest.getPrice());
-        }
+
         if (Objects.nonNull(productRequest.getCategory())) {
             product.setCategory(productRequest.getCategory());
             System.out.println(productRequest.getCategory());
@@ -159,10 +158,11 @@ public class ProductService {
             product.setOriginalPrice(productRequest.getOriginalPrice());
             System.out.println(productRequest.getOriginalPrice());
         }
-        if (Objects.nonNull(productRequest.getQuantity())) {
-            product.setQuantity(productRequest.getQuantity());
-            System.out.println(productRequest.getQuantity());
+        if (Objects.nonNull(productRequest.getStok())) {
+            product.setStok(productRequest.getStok());
+            System.out.println(productRequest.getStok());
         }
+
         productRepository.save(product);
         List<ProductImageResponse> productImageResponse = product.getProductImages().stream().map(productImage -> toProductImageResponse(productImage)).toList();
         return toDetailProductResponse(product, productImageResponse);

@@ -36,7 +36,7 @@ public class Product {
 
     private String size;
 
-    private Long quantity;
+    private Long stok;
 
     private BigDecimal price;
 
@@ -59,5 +59,10 @@ public class Product {
     private Admin admin;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> productImages;
+
+
 }

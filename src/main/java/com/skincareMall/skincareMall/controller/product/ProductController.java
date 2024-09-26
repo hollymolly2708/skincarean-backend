@@ -2,7 +2,7 @@ package com.skincareMall.skincareMall.controller.product;
 
 import com.skincareMall.skincareMall.entity.Admin;
 import com.skincareMall.skincareMall.model.PagingResponse;
-import com.skincareMall.skincareMall.model.product.request.ProductRequest;
+import com.skincareMall.skincareMall.model.product.request.CreateProductRequest;
 import com.skincareMall.skincareMall.model.product.request.SearchProductRequest;
 import com.skincareMall.skincareMall.model.product.request.UpdateProductRequest;
 import com.skincareMall.skincareMall.model.product.response.DetailProductResponse;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
 import java.util.List;
 
 @RestController
@@ -26,8 +25,8 @@ public class ProductController {
             path = "/api/products",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<String> createProduct(Admin admin, @RequestBody ProductRequest productRequest) {
-        productService.createProduct(admin, productRequest);
+    public WebResponse<String> createProduct(Admin admin, @RequestBody CreateProductRequest createProductRequest) {
+        productService.createProduct(admin, createProductRequest);
         return WebResponse.<String>builder().data("Product berhasil ditambahkan").build();
 
     }

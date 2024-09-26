@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class ProductImageRequest {
+public class CreateProductImageRequest {
     @Size(max = 255)
     @NotBlank
     private String imageUrl;

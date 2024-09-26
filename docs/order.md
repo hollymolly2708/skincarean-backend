@@ -20,7 +20,6 @@ Request Body :
   "items": [
     {
       "product_id": "323232",
-      "variant_id": "232323",
       "quantity": 2,
       "price": 50.00
     }

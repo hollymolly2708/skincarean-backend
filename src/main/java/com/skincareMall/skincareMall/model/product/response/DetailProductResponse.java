@@ -21,7 +21,7 @@ public class DetailProductResponse {
     private String thumbnailImage;
     private String bpomCode;
     private String size;
-    private Long quantity;
+    private Long stok;
     private BigDecimal originalPrice;
     private BigDecimal price;
     private BigDecimal discount;

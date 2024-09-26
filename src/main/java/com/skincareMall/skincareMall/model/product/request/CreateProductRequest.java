@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductRequest {
+public class CreateProductRequest {
     @Size(max = 100)
     @NotBlank
     private String productName;
@@ -36,20 +36,14 @@ public class ProductRequest {
     @Size(max = 100)
     @NotBlank
     private String size;
-    @NotNull
-    @Digits(integer = 20, fraction = 2, message = "Harga harus berupa angka dengan maksimal 20 digit dan 2 desimal")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Harga harus lebih besar dari 0.0")
-    private BigDecimal price;
-    @NotNull
     @Digits(integer = 2, fraction = 0, message = "Discount harus berupa angka dengan maksimal 2 digit dan 0 desimal")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Harga harus lebih besar dari 0.0")
-    private BigDecimal discount;
+    private BigDecimal discount = BigDecimal.ZERO;
     @NotNull
     @Digits(integer = 20, fraction = 2, message = "Harga harus berupa angka dengan maksimal 20 digit dan 2 desimal")
     @DecimalMin(value = "0.0", inclusive = false, message = "Harga harus lebih besar dari 0.0")
     private BigDecimal originalPrice;
-    private Long quantity;
+    private Long stok;
     @NotNull
-    private List<ProductImageRequest> productImages;
+    private List<CreateProductImageRequest> productImages;
 
 }

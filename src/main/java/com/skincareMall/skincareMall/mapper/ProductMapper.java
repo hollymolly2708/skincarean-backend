@@ -28,7 +28,7 @@ public class ProductMapper {
                 .bpomCode(product.getBpomCode())
                 .originalPrice(product.getOriginalPrice())
                 .price(product.getPrice())
-                .quantity(product.getQuantity())
+                .stok(product.getStok())
                 .brands(product.getBrands())
                 .category(product.getCategory())
                 .size(product.getSize())
@@ -52,7 +52,7 @@ public class ProductMapper {
                 .thumbnailImage(product.getThumbnailImage())
                 .originalPrice(product.getOriginalPrice())
                 .discount(product.getDiscount())
-                .quantity(product.getQuantity())
+                .stok(product.getStok())
                 .build();
     }
 }
