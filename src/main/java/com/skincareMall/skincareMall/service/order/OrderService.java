@@ -79,13 +79,17 @@ public class OrderService {
                     .isPromo(product.getIsPromo())
                     .category(product.getCategory())
                     .bpomCode(product.getBpomCode())
+                    .discount(product.getDiscount())
+                    .brands(product.getBrands())
                     .thumbnailImage(product.getThumbnailImage())
                     .size(product.getSize())
                     .productName(product.getName())
                     .build();
 
-            return  OrderResponse.builder()
+            return OrderResponse.builder()
                     .productResponse(productResponse)
+                    .orderId(order.getId())
+                    .productId(product.getId())
                     .totalPrice(order.getTotalPrice())
                     .shippingAddress(order.getShippingAddress())
                     .paymentStatus(order.getPaymentStatus())
@@ -100,6 +104,48 @@ public class OrderService {
         }).toList();
 
         return orderResponses;
+    }
+
+    public OrderResponse detailOrderResponse(User user, String orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order is'nt found"));
+        String productId = order.getProduct().getId();
+
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product is'nt found"));
+
+        ProductResponse productResponse = ProductResponse.builder()
+                .productName(product.getId())
+                .brands(product.getBrands())
+                .size(product.getSize())
+                .stok(product.getStok())
+                .thumbnailImage(product.getThumbnailImage())
+                .price(product.getPrice())
+                .discount(product.getDiscount())
+                .originalPrice(product.getOriginalPrice())
+                .bpomCode(product.getBpomCode())
+                .category(product.getCategory())
+                .isPromo(product.getIsPromo())
+                .productId(product.getId())
+                .productDescription(product.getDescription())
+                .build();
+        OrderResponse orderResponse = OrderResponse.builder()
+                .orderId(order.getId())
+                .tax(order.getTax())
+                .quantity(order.getQuantity())
+                .description(order.getDescription())
+                .productResponse(productResponse)
+                .shippingCost(order.getShippingCost())
+                .lastUpdatedAt(order.getLastUpdatedAt())
+                .productId(product.getId())
+                .paymentStatus(order.getPaymentStatus())
+                .paymentMethodId(order.getPaymentMethod().getId())
+                .totalPrice(order.getTotalPrice())
+                .createdAt(order.getCreatedAt())
+                .shippingAddress(order.getShippingAddress())
+                .build();
+
+        return orderResponse;
+
+
     }
 
 

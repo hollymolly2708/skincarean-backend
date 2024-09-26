@@ -37,4 +37,10 @@ public class OrderController {
         List<OrderResponse> orders = orderService.getAllOrders(user);
         return WebResponse.<List<OrderResponse>>builder().data(orders).build();
     }
+
+    @GetMapping(path = "/api/orders/{orderId}")
+    public WebResponse<OrderResponse> getDetailOrder(User user,@PathVariable("orderId") String orderId){
+        OrderResponse orderResponse = orderService.detailOrderResponse(user, orderId);
+        return WebResponse.<OrderResponse>builder().data(orderResponse).build();
+    }
 }
