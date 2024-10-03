@@ -16,8 +16,10 @@ import java.util.List;
 @Table(name = "payment_methods")
 public class PaymentMethod {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String image;
     @OneToMany(mappedBy = "paymentMethod", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 }

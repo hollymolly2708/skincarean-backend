@@ -22,6 +22,7 @@ public class AdminAuthController {
     public WebResponse<String> register(@RequestParam String fullName,
                                         @RequestParam String password,
                                         @RequestParam String username,
+                                        @RequestParam String confirmPassword,
                                         @RequestParam String address,
                                         @RequestParam String email,
                                         @RequestParam String phone,
@@ -33,6 +34,7 @@ public class AdminAuthController {
         registerAdminRequest.setAddress(address);
         registerAdminRequest.setEmail(email);
         registerAdminRequest.setUsername(username);
+        registerAdminRequest.setConfirmPassword(confirmPassword);
         registerAdminRequest.setPassword(password);
         registerAdminRequest.setFullName(fullName);
 

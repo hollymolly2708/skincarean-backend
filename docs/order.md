@@ -12,18 +12,13 @@ Request Body :
 
 ```json
 {
-  "user_id": "213123",
-  "total_amount": "30.000",
-  "created_at": "28/08/2024 16:08:99",
-  "status_order": "pending",
-  "updated_at": "28/08/2024 16:08:99",
-  "items": [
-    {
-      "product_id": "323232",
-      "quantity": 2,
-      "price": 50.00
-    }
-  ]
+  "quantity": 20,
+  "description": "Order dibuat",
+  "productId": "9949fed3-e979-46dc-b143-194686ca2277",
+  "shippingAddress": "TCP",
+  "shippingCost": 20000,
+  "paymentMethodId": 2,
+  "tax": 100000
 }
 ```
 
@@ -57,12 +52,26 @@ Response Body (Success) :
 {
   "data": [
     {
-      "id": "string", // ID pesanan
-      "user_id": "string", // ID pengguna
-      "status": "string", // Status pesanan
-      "total_amount": 100.00, // Total harga
-      "created_at": "timestamp", // Waktu pembuatan
-      "updated_at": "timestamp" // Waktu pembaruan
+      "orderId": "1",
+      "quantity": 20,
+      "description": "Order dibuat",
+      "productId": "9949fed3-e979-46dc-b143-194686ca2277",
+      "shippingAddress": "TCP",
+      "paymentStatus": "Belum dibayar",
+      "shippingCost": 20000,
+      "paymentMethodId": 2,
+      "tax": 100000
+    },
+    {
+      "orderId": "1",
+      "quantity": 20,
+      "description": "Order dibuat",
+      "paymentMethodId": 2,
+      "productId": "9949fed3-e979-46dc-b143-194686ca2277",
+      "shippingAddress": "TCP",
+      "paymentStatus": "Belum dibayar",
+      "shippingCost": 20000,
+      "tax": 100000
     }
   ]
 }
@@ -86,24 +95,47 @@ Request Header :
 
 ```json
 {
-  "data": [
-    {
-      "id": "string", // ID pesanan
-      "user_id": "string", // ID pengguna
-      "status": "string", // Status pesanan
-      "total_amount": 100.00, // Total harga
-      "created_at": "timestamp", // Waktu pembuatan
-      "updated_at": "timestamp" // Waktu pembaruan,
-      "items": [
+  "data": {
+    "orderId": "1",
+    "quantity": 20,
+    "description": "Order dibuat",
+    "productId": "9949fed3-e979-46dc-b143-194686ca2277",
+    "shippingAddress": "TCP",
+    "paymentStatus": "Belum dibayar",
+    "paymentMethodId": 2,
+    "shippingCost": 20000,
+    "tax": 100000,
+    "created_at": "27/08/2000 22:10:05",
+    "expired_at": "27/08/2000 22:10:05", //24 jam setelah order dibuat
+    "detail_product": {
+      "productName": "Skintific Serum 125",
+      "productDescription": "Serum Skintific 125g untuk meremajakan kulit",
+      "isPromo": true,
+      "thumbnailImage": "http",
+      "bpomCode": "NA93029039",
+      "size": "25",
+      "stok": 20,
+      "originalPrice": 100000.00,
+      "price": 75000.00,
+      "discount": 25.00,
+      "brands": "Skintific",
+      "category": "Serum",
+      "productImage": [
         {
-          "product_id": "323232",
-          "variant_id": "232323",
-          "quantity": 2,
-          "price": 50.00
+          "id": 4,
+          "imageUrl": "skintific1.jpeg"
+        },
+        {
+          "id": 5,
+          "imageUrl": "gambar2.jpeg"
+        },
+        {
+          "id": 6,
+          "imageUrl": "gambar3.jpeg"
         }
       ]
     }
-  ]
+  }
 }
 ```
 
@@ -115,49 +147,6 @@ Response Body (Failed) :
 }
 ```
 
-## SEARCH ORDER 
-
-Endpoint : GET/api/orders
-
-Request Header :
-
-- X-API-TOKEN : Token
-
-Response Body (Success) :
-
-```json
-{
-  "data": [
-    {
-      "id": "string",
-      // ID pesanan
-      "user_id": "string",
-      // ID pengguna
-      "status": "string",
-      // Status pesanan
-      "total_amount": 100.00,
-      // Total harga
-      "created_at": "timestamp",
-      // Waktu pembuatan
-      "updated_at": "timestamp",
-      // Waktu pembaruan,
-      "items": [
-        {
-          "product_id": "323232",
-          "variant_id": "232323",
-          "quantity": 2,
-          "price": 50.00
-        }
-      ],
-      "paging": {
-        "total_page": 10,
-        "size": 10,
-        "current_page": 0
-      }
-    }
-  ]
-}
-```
 
 ## DELETE ORDER
 
@@ -174,6 +163,7 @@ Response Body (Success) :
   "data": "order berhasil dihapus"
 }
 ```
+
 
 Response Body (Failed) :
 

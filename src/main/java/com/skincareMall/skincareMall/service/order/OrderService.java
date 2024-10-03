@@ -10,6 +10,7 @@ import com.skincareMall.skincareMall.repository.PaymentMethodRepository;
 import com.skincareMall.skincareMall.repository.ProductRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,27 +39,35 @@ public class OrderService {
         if (Objects.nonNull(request)) {
             Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is'nt found"));
             PaymentMethod paymentMethod = paymentMethodRepository.findById(request.getPaymentMethodId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Payment Method is'nt found"));
-            Long quantity = request.getQuantity();
-            BigDecimal price = product.getPrice();
-            BigDecimal tax = request.getTax();
-            BigDecimal shippingCost = request.getShippingCost();
+            if(product.getStok() == 0){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "stok product has been empty");
+            }else if (product.getStok() < request.getQuantity()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"the quantity ordered is more than the available stock");
+            }
+            else{
+                Long quantity = request.getQuantity();
+                BigDecimal price = product.getPrice();
+                BigDecimal tax = request.getTax();
+                BigDecimal shippingCost = request.getShippingCost();
 
 
-            Order order = new Order();
-            order.setUser(user);
-            order.setId(UUID.randomUUID().toString());
-            order.setPaymentStatus(request.getPaymentStatus());
-            order.setTotalPrice(price.multiply(BigDecimal.valueOf(quantity)).add(tax).add(shippingCost));
-            order.setPaymentMethod(paymentMethod);
-            order.setQuantity(request.getQuantity());
-            order.setDescription(request.getDescription());
-            order.setShippingCost(request.getShippingCost());
-            order.setTax(request.getTax());
-            order.setShippingAddress(request.getShippingAddress());
-            order.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
-            order.setProduct(product);
-            order.setLastUpdatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
-            orderRepository.save(order);
+                Order order = new Order();
+                order.setUser(user);
+                order.setId(UUID.randomUUID().toString());
+                order.setPaymentStatus(request.getPaymentStatus());
+                order.setTotalPrice(price.multiply(BigDecimal.valueOf(quantity)).add(tax).add(shippingCost));
+                order.setPaymentMethod(paymentMethod);
+                order.setQuantity(request.getQuantity());
+                order.setDescription(request.getDescription());
+                order.setShippingCost(request.getShippingCost());
+                order.setTax(request.getTax());
+                order.setShippingAddress(request.getShippingAddress());
+                order.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
+                order.setProduct(product);
+                order.setLastUpdatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
+                orderRepository.save(order);
+            }
+
         }
     }
 
