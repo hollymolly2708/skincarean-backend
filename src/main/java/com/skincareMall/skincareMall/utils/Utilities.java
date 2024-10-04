@@ -1,6 +1,7 @@
 package com.skincareMall.skincareMall.utils;
 
 import java.sql.Timestamp;
+import java.util.Random;
 
 public class Utilities {
     private Utilities(){
@@ -15,5 +16,16 @@ public class Utilities {
 
     public static Long next30days() {
         return System.currentTimeMillis() + (1000 * 16 * 24 * 30);
+    }
+
+    public static String generatePaymentCode(int length){
+        Random random = new Random();
+        StringBuilder code = new StringBuilder();
+
+        for(int i =0; i < length; i++){
+            int digit = random.nextInt(10);
+            code.append(digit);
+        }
+        return code.toString();
     }
 }

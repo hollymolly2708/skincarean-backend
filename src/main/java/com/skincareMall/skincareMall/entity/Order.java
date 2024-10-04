@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,8 +17,6 @@ import java.sql.Timestamp;
 public class Order {
     @Id
     private String id;
-    @Column(name = "payment_status")
-    private String paymentStatus;
     private Long quantity;
     private String description;
     @Column(name = "total_price")
@@ -29,15 +28,16 @@ public class Order {
     private BigDecimal tax;
     @Column(name = "created_at")
     private Timestamp createdAt;
-    @Column(name = "last_updated_at")
-    private Timestamp lastUpdatedAt;
+    @Column(name = "expired_at")
+    private Timestamp expiredAt;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "username")
     private User user;
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
-    @ManyToOne
-    @JoinColumn(name = "payment_method_id", referencedColumnName = "id")
-    private PaymentMethod paymentMethod;
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PaymentProcess paymentProcess;
+
+
 }

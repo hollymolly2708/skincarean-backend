@@ -37,7 +37,7 @@ public class PaymentMethodController {
         return WebResponse.<String>builder().data("Payment method has successfully deleted").build();
     }
 
-    @PatchMapping (path = "/api/payment-methods/{paymentMethodId}",consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping (path = "/api/payment-methods/{paymentMethodId}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<PaymentMethodResponse> updatePaymentMethod(Admin admin, @PathVariable("paymentMethodId") Long paymentMethodId, @RequestBody UpdatePaymentMethodRequest updatePaymentMethodRequest){
         PaymentMethodResponse paymentMethodResponse = paymentMethodService.updatePaymentMethod(admin, paymentMethodId, updatePaymentMethodRequest);
         return WebResponse.<PaymentMethodResponse>builder().data(paymentMethodResponse).build();

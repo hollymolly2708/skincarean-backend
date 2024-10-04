@@ -1,5 +1,7 @@
 package com.skincareMall.skincareMall.model.order.response;
 
+import com.skincareMall.skincareMall.entity.PaymentProcess;
+import com.skincareMall.skincareMall.model.payment_process.response.PaymentProcessResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,8 +19,6 @@ import java.util.List;
 public class OrderResponse {
     private String orderId;
     private String productId;
-    private Long paymentMethodId;
-    private String paymentStatus;
     private String shippingAddress;
     private Long quantity;
     private String description;
@@ -26,6 +26,7 @@ public class OrderResponse {
     private BigDecimal tax;
     private BigDecimal totalPrice;
     private Timestamp createdAt;
-    private Timestamp lastUpdatedAt;
-    private ProductResponse productResponse;
+    private Timestamp expiredAt;
+    private ProductResponse product;
+    private PaymentProcessResponse payment;
 }
