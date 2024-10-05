@@ -3,6 +3,7 @@ package com.skincareMall.skincareMall.service.user;
 import com.skincareMall.skincareMall.entity.User;
 import com.skincareMall.skincareMall.model.user.request.UpdateUserRequest;
 import com.skincareMall.skincareMall.model.user.response.UserResponse;
+import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.repository.UserRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
@@ -20,8 +21,8 @@ public class UserService {
     private ValidationService validationService;
 
 
-    public UserResponse getUser(User user) {
-        return UserResponse.builder()
+    public WebResponse<UserResponse> getUser(User user) {
+        return WebResponse.<UserResponse>builder().data(UserResponse.builder()
                 .username(user.getUsernameUser())
                 .address(user.getAddress())
                 .phone(user.getPhone())
@@ -34,14 +35,13 @@ public class UserService {
                 .tokenExpiredAt(Utilities.changeFormatToTimeStamp(user.getTokenExpiredAt()))
                 .tokenCreatedAt(Utilities.changeFormatToTimeStamp(user.getTokenCreatedAt()))
                 .email(user.getEmail())
-                .build();
-
+                .build()
+        ).isSuccess(true).build();
     }
 
     @Transactional
-    public UserResponse updateUser(User user, UpdateUserRequest request) {
+    public WebResponse<UserResponse> updateUser(User user, UpdateUserRequest request) {
         validationService.validate(request);
-
         if (Objects.nonNull(request.getFullName())) {
             user.setFullName(request.getFullName());
         }
@@ -54,20 +54,30 @@ public class UserService {
         if (Objects.nonNull(request.getAddress())) {
             user.setAddress(request.getAddress());
         }
-        userRepository.save(user);
-        return UserResponse.builder()
-                .fullName(user.getFullName())
-                .address(user.getAddress())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .token(user.getToken())
-                .createdAt(user.getCreatedAt())
-                .lastUpdatedAt(user.getLastUpdatedAt())
-                .address(user.getAddress())
-                .tokenCreatedAt(Utilities.changeFormatToTimeStamp(user.getTokenCreatedAt()))
-                .lastUpdatedAt(user.getLastUpdatedAt())
-                .tokenExpiredAt(Utilities.changeFormatToTimeStamp(user.getTokenExpiredAt()))
-                .username(user.getUsernameUser())
-                .build();
+        try {
+            userRepository.save(user);
+            return WebResponse
+                    .<UserResponse>builder()
+                    .data(UserResponse.builder()
+                            .fullName(user.getFullName())
+                            .address(user.getAddress())
+                            .email(user.getEmail())
+                            .phone(user.getPhone())
+                            .token(user.getToken())
+                            .createdAt(user.getCreatedAt())
+                            .lastUpdatedAt(user.getLastUpdatedAt())
+                            .address(user.getAddress())
+                            .tokenCreatedAt(Utilities.changeFormatToTimeStamp(user.getTokenCreatedAt()))
+                            .lastUpdatedAt(user.getLastUpdatedAt())
+                            .tokenExpiredAt(Utilities.changeFormatToTimeStamp(user.getTokenExpiredAt()))
+                            .username(user.getUsernameUser())
+                            .build()).isSuccess(true)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return WebResponse.<UserResponse>builder().isSuccess(false).errors("Kesalahan terjadi ketika mengupdate data user kedalam database").build();
+        }
+
     }
 }

@@ -7,8 +7,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.skincareMall.skincareMall.entity.User;
 import com.skincareMall.skincareMall.model.google_auth.request.TokenRequest;
-import com.skincareMall.skincareMall.model.google_auth.response.VerificationResponse;
 import com.skincareMall.skincareMall.model.user.response.UserResponse;
+import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.repository.UserRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
@@ -21,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,7 +35,7 @@ public class GoogleAuthService {
 
 
     @Transactional
-    public VerificationResponse verifyToken(TokenRequest tokenRequest) {
+    public WebResponse<UserResponse> verifyToken(TokenRequest tokenRequest) {
         validationService.validate(tokenRequest);
         String idTokenString = tokenRequest.getToken();
 
@@ -74,8 +73,8 @@ public class GoogleAuthService {
                         }
                 );
 
-                return VerificationResponse.builder().valid(true)
-                        .user(UserResponse
+                return WebResponse.<UserResponse>builder()
+                        .data(UserResponse
                                 .builder()
                                 .email(user.getEmail())
                                 .profilePicture(user.getPhotoProfile())
@@ -88,9 +87,8 @@ public class GoogleAuthService {
                                 .tokenExpiredAt(Utilities.changeFormatToTimeStamp(user.getTokenExpiredAt()))
                                 .tokenCreatedAt(Utilities.changeFormatToTimeStamp(user.getTokenCreatedAt()))
                                 .username(user.getEmail())
-
-
                                 .build())
+                        .isSuccess(true)
                         .build();
 
             } else {
@@ -98,15 +96,13 @@ public class GoogleAuthService {
             }
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
-            return VerificationResponse.builder().valid(false).error("Masalah keamanan saat memverifikasi akun").build();
-        }
-        catch ( IOException e){
+            return WebResponse.<UserResponse>builder().errors("Masalah keamanan saat memverifikasi akun").isSuccess(false).build();
+        } catch (IOException e) {
             e.printStackTrace();
-            return VerificationResponse.builder().valid(false).error("Masalah I/O saat memverifikasi akun").build();
-        }
-        catch (Exception e){
+            return WebResponse.<UserResponse>builder().errors("Masalah I/O saat memverifikasi akun").isSuccess(false).build();
+        } catch (Exception e) {
             e.printStackTrace();
-            return VerificationResponse.builder().valid(false).error("Kesalahan tidak terduga saat memverifikasi akun").build();
+            return WebResponse.<UserResponse>builder().errors("Kesalahan tidak terduga saat memverifikasi akun").isSuccess(false).build();
         }
     }
 }

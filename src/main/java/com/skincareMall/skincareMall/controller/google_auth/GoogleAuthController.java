@@ -3,7 +3,7 @@ package com.skincareMall.skincareMall.controller.google_auth;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.skincareMall.skincareMall.model.google_auth.request.TokenRequest;
-import com.skincareMall.skincareMall.model.google_auth.response.VerificationResponse;
+import com.skincareMall.skincareMall.model.user.response.UserResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.google_auth.GoogleAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,8 @@ public class GoogleAuthController {
     @Autowired
     private GoogleAuthService googleAuthService;
 
-    @PostMapping("/api/google-auth/verifyToken")
-    public WebResponse<VerificationResponse> verifyToken(@RequestBody TokenRequest tokenRequest) {
-        VerificationResponse verificationResponse = googleAuthService.verifyToken(tokenRequest);
-        return WebResponse.<VerificationResponse>builder().data(verificationResponse).build();
+    @PostMapping("/api/users/auth/login/google/verify")
+    public WebResponse<UserResponse> verifyToken(@RequestBody TokenRequest tokenRequest) {
+        return googleAuthService.verifyToken(tokenRequest);
     }
 }

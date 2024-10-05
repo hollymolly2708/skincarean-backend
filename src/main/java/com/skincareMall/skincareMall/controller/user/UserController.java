@@ -19,8 +19,8 @@ public class UserController {
 
     @GetMapping(path = "/api/users/current-user", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<UserResponse> getUser(User user) {
-        UserResponse userResponse = userService.getUser(user);
-        return WebResponse.<UserResponse>builder().data(userResponse).build();
+        return userService.getUser(user);
+
     }
 
 
@@ -36,8 +36,8 @@ public class UserController {
         updateUserRequest.setPhone(phone);
         updateUserRequest.setEmail(email);
         updateUserRequest.setFullName(fullName);
-        UserResponse updateUserResponse = userService.updateUser(user, updateUserRequest);
-        return WebResponse.<UserResponse>builder().data(updateUserResponse).build();
+        return userService.updateUser(user, updateUserRequest);
+
 
     }
 }

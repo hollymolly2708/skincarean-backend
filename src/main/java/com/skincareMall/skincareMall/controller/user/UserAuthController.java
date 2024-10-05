@@ -3,7 +3,6 @@ package com.skincareMall.skincareMall.controller.user;
 import com.skincareMall.skincareMall.entity.User;
 import com.skincareMall.skincareMall.model.user.request.LoginUserRequest;
 import com.skincareMall.skincareMall.model.user.request.RegisterUserRequest;
-import com.skincareMall.skincareMall.model.user.response.TokenResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.user.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,20 +39,20 @@ public class UserAuthController {
         registerUserRequest.setConfirmPassword(confirmPassword);
         registerUserRequest.setUsername(username);
 
-        userAuthService.registerUser(registerUserRequest);
-        return WebResponse.<String>builder().data("User berhasil ditambahkan").build();
+        return userAuthService.registerUser(registerUserRequest);
+
     }
 
     @PostMapping(path = "/api/users/auth/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<TokenResponse> loginUser(@RequestParam String username, @RequestParam String password) {
+    public WebResponse loginUser(@RequestParam String username, @RequestParam String password) {
         LoginUserRequest loginUserRequest = LoginUserRequest.builder().password(password).username(username).build();
-        TokenResponse loginResponse = userAuthService.login(loginUserRequest);
-        return WebResponse.<TokenResponse>builder().data(loginResponse).build();
+        return userAuthService.login(loginUserRequest);
+
     }
 
-    @DeleteMapping(path = "/api/users/auth/logout",produces = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<String> logoutUser(User user){
-        userAuthService.logoutUser(user);
-        return WebResponse.<String>builder().data("Logout Success").build();
+    @DeleteMapping(path = "/api/users/auth/logout", produces = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<String> logoutUser(User user) {
+        return userAuthService.logoutUser(user);
+
     }
 }
