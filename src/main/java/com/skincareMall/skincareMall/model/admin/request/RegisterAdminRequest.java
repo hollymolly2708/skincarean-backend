@@ -34,4 +34,6 @@ public class RegisterAdminRequest {
     @Size(max = 100)
     @NotBlank
     private String confirmPassword;
+    @Size(max = 255)
+    private String photoProfile;
 }

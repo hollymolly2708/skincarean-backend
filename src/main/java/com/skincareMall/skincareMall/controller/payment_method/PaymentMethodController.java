@@ -22,7 +22,7 @@ public class PaymentMethodController {
     @PostMapping(path = "/api/payment-methods", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> createPaymentMethod(Admin admin, @RequestBody CreatePaymentMethodRequest request){
         paymentMethodService.createPaymentMethod(admin,request);
-        return WebResponse.<String>builder().data("Payment method has succesfully created").build();
+        return WebResponse.<String>builder().data("Metode pembayaran berhasil dibuat").build();
     }
 
     @GetMapping(path = "/api/payment-methods",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,7 +34,7 @@ public class PaymentMethodController {
     @DeleteMapping(path = "/api/payment-methods/{paymentMethodId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> deletePaymentMethod(Admin admin, @PathVariable("paymentMethodId") Long paymentMethodId){
         paymentMethodService.deletePaymentMethod(admin, paymentMethodId);
-        return WebResponse.<String>builder().data("Payment method has successfully deleted").build();
+        return WebResponse.<String>builder().data("Metode pembayaran berhasil dihapus").build();
     }
 
     @PatchMapping (path = "/api/payment-methods/{paymentMethodId}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

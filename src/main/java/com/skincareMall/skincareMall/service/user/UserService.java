@@ -19,6 +19,7 @@ public class UserService {
     @Autowired
     private ValidationService validationService;
 
+
     public UserResponse getUser(User user) {
         return UserResponse.builder()
                 .username(user.getUsernameUser())

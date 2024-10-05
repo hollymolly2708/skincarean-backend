@@ -32,10 +32,10 @@ public class UserAuthService {
     public void registerUser(RegisterUserRequest request) {
         validationService.validate(request);
         if (userRepository.existsById(request.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "username already registered");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "username sudah terdaftar");
         }
         if (!Objects.equals(request.getConfirmPassword(), request.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "password and confirm password is'nt equals");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "password dan konfirmasi password tidak sama");
         }
 
         System.out.println(request.getConfirmPassword());
@@ -56,7 +56,7 @@ public class UserAuthService {
     @Transactional
     public TokenResponse login(LoginUserRequest loginUserRequest) {
         validationService.validate(loginUserRequest);
-        User user = userRepository.findById(loginUserRequest.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username or password is wrong"));
+        User user = userRepository.findById(loginUserRequest.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username atau password salah"));
         if (BCrypt.checkpw(loginUserRequest.getPassword(), user.getPasswordUser())) {
             user.setToken(UUID.randomUUID().toString());
             user.setTokenExpiredAt(next30days());
@@ -69,7 +69,7 @@ public class UserAuthService {
                     .tokenExpiredAt(user.getTokenExpiredAt())
                     .build();
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username or password is wrong");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username atau password salah");
         }
     }
 

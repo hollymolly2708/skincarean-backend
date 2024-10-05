@@ -7,6 +7,7 @@ import com.skincareMall.skincareMall.repository.AdminRepository;
 import com.skincareMall.skincareMall.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ public class AdminService {
     private ValidationService validationService;
     @Autowired
     private AdminRepository adminRepository;
+
 
     public AdminResponse getAdmin(Admin admin) {
 
@@ -30,6 +32,7 @@ public class AdminService {
                 .build();
     }
 
+    @Transactional
     public AdminResponse updateAdmin(Admin admin, UpdateAdminRequest updateAdminRequest) {
         validationService.validate(updateAdminRequest);
 

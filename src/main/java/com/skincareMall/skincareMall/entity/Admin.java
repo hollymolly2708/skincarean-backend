@@ -26,6 +26,8 @@ public class Admin {
     private String email;
     private String phone;
     private String token;
+    @Column(name = "photo_profile")
+    private String photoProfile;
     @Column(name = "token_expired_at")
     private Long tokenExpiredAt;
     @Column(name = "token_created_at")
