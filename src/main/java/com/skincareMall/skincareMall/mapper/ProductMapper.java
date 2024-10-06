@@ -9,10 +9,11 @@ import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import java.util.List;
 
 public class ProductMapper {
-    private ProductMapper(){
+    private ProductMapper() {
 
     }
-    public static ProductImageResponse toProductImageResponse(ProductImage productImage){
+
+    public static ProductImageResponse toProductImageResponse(ProductImage productImage) {
         return ProductImageResponse.builder()
                 .imageUrl(productImage.getImageUrl())
                 .id(productImage.getId())
@@ -29,26 +30,26 @@ public class ProductMapper {
                 .originalPrice(product.getOriginalPrice())
                 .price(product.getPrice())
                 .stok(product.getStok())
-                .brands(product.getBrands())
-                .category(product.getCategory())
+                .brandName(product.getBrand().getName())
+                .categoryName(product.getCategory().getName())
                 .size(product.getSize())
                 .discount(product.getDiscount())
                 .thumbnailImage(product.getThumbnailImage())
                 .build();
     }
 
-    public static DetailProductResponse toDetailProductResponse(Product product, List<ProductImageResponse> productImageResponse){
+    public static DetailProductResponse toDetailProductResponse(Product product, List<ProductImageResponse> productImageResponse) {
         return DetailProductResponse.builder()
                 .productName(product.getName())
                 .productImage(productImageResponse)
                 .productId(product.getId())
                 .productDescription(product.getDescription())
-                .brands(product.getBrands())
+                .brandName(product.getBrand().getName())
                 .bpomCode(product.getBpomCode())
                 .price(product.getPrice())
                 .isPromo(product.getIsPromo())
                 .size(product.getSize())
-                .category(product.getCategory())
+                .categoryName(product.getCategory().getName())
                 .thumbnailImage(product.getThumbnailImage())
                 .originalPrice(product.getOriginalPrice())
                 .discount(product.getDiscount())

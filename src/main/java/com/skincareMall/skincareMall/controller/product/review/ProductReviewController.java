@@ -51,7 +51,7 @@ public class ProductReviewController {
     public WebResponse<List<ProductReviewResponse>> searchProduct(@RequestParam(name = "rating", required = false) Byte rating,
                                                                   @RequestParam(name = "isRecommended",required = false) Boolean isRecommended,
                                                                   @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
-                                                                  @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                                                  @RequestParam(name = "page", required = false, defaultValue = "0") Integer page
 
     ) {
         SearchProductReviewRequest request = SearchProductReviewRequest.builder()

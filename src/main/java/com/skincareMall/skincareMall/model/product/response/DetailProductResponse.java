@@ -25,7 +25,7 @@ public class DetailProductResponse {
     private BigDecimal originalPrice;
     private BigDecimal price;
     private BigDecimal discount;
-    private String brands;
-    private String category;
+    private String brandName;
+    private String categoryName;
     private List<ProductImageResponse> productImage;
 }
