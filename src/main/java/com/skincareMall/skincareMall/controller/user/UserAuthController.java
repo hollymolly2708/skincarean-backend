@@ -1,21 +1,28 @@
 package com.skincareMall.skincareMall.controller.user;
 
 import com.skincareMall.skincareMall.entity.User;
+import com.skincareMall.skincareMall.model.google_auth.request.GoogleLoginTokenRequest;
 import com.skincareMall.skincareMall.model.user.request.LoginUserRequest;
 import com.skincareMall.skincareMall.model.user.request.RegisterUserRequest;
+import com.skincareMall.skincareMall.model.user.response.UserResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.user.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserAuthController {
     @Autowired
     private UserAuthService userAuthService;
+
+    @Autowired
+    private UserAuthService googleLoginAuthService;
+
+    @PostMapping("/api/users/auth/login/google/verify")
+    public WebResponse<UserResponse> verifyToken(@RequestBody GoogleLoginTokenRequest tokenRequest) {
+        return googleLoginAuthService.verifyToken(tokenRequest);
+    }
 
     @PostMapping(path = "/api/users/auth/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> registerUser(@RequestParam String username,
@@ -55,4 +62,8 @@ public class UserAuthController {
         return userAuthService.logoutUser(user);
 
     }
+
+
+
+
 }

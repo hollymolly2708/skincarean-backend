@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TokenRequest {
+public class GoogleLoginTokenRequest {
     @NotNull
     @NotBlank
     private String token;
