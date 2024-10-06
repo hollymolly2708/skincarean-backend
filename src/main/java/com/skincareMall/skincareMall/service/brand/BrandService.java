@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class BrandService {
@@ -70,6 +71,11 @@ public class BrandService {
     }
 
     public WebResponse<String> deleteBrand(Admin admin, Long brandId) {
+
+        Optional<Brand> brand = brandRepository.findById(brandId);
+        if (brand.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Brand tidak ditemukan");
+        }
 
         try {
             brandRepository.deleteById(brandId);

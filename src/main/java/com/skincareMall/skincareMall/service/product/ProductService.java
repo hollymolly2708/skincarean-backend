@@ -146,7 +146,7 @@ public class ProductService {
         if (Objects.nonNull(productRequest.getProductImages())) {
 //            List<ProductImage> productImages = productRequest.getProductImages().stream().map(productImageRequest -> toProductImage(productImageRequest)).toList();
             for (UpdateProductImageRequest updateProductImageRequest : productRequest.getProductImages()) {
-                ProductImage productImageByIdAndProductId = productImageRepository.findByIdAndProductId(updateProductImageRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
+                ProductImage productImageByIdAndProductId = productImageRepository.findByIdAndProductId(updateProductImageRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk Image tidak ditemukan"));
                 if (productImageByIdAndProductId != null) {
                     productImageByIdAndProductId.setImageUrl(updateProductImageRequest.getImageUrl());
                     productImageRepository.save(productImageByIdAndProductId);

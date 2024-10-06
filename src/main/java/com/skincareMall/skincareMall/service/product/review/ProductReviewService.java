@@ -59,14 +59,14 @@ public class ProductReviewService {
 
     @Transactional
     public void deleteProductReview(User user, String productId, Long productReviewId) {
-        ProductReview productReview = productReviewRepository.findByIdAndProductIdAndUserUsernameUser(productReviewId, productId, user.getUsernameUser()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
+        ProductReview productReview = productReviewRepository.findByIdAndProductIdAndUserUsernameUser(productReviewId, productId, user.getUsernameUser()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Review tidak ditemukan"));
         productReviewRepository.deleteById(productReview.getId());
     }
 
     @Transactional
     public void updateProductReview(User user, String productId, Long productReviewId, UpdateProductReviewRequest updateProductReviewRequest) {
         validationService.validate(updateProductReviewRequest);
-        ProductReview productReview = productReviewRepository.findByIdAndProductIdAndUserUsernameUser(productReviewId, productId, user.getUsernameUser()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
+        ProductReview productReview = productReviewRepository.findByIdAndProductIdAndUserUsernameUser(productReviewId, productId, user.getUsernameUser()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Review tidak ditemukan"));
 
         if (Objects.nonNull(updateProductReviewRequest.getReview())) {
             productReview.setReview(updateProductReviewRequest.getReview());
@@ -92,6 +92,7 @@ public class ProductReviewService {
             return ProductReviewResponse.builder()
                     .fullNameUser(productReview.getUser().getFullName())
                     .review(productReview.getReview())
+                    .reviewId(productReview.getId())
                     .createdAt(productReview.getCreatedAt())
                     .usagePeriod(productReview.getUsagePeriod())
                     .photoProfileUser(productReview.getUser().getPhotoProfile())
@@ -111,7 +112,7 @@ public class ProductReviewService {
                 predicates.add(criteriaBuilder.equal(root.get("isRecommended"), searchProductReviewRequest.getIsRecommended()));
             }
             if (Objects.nonNull(searchProductReviewRequest.getRating())) {
-                predicates.add(criteriaBuilder.equal(root.get("rating"),  searchProductReviewRequest.getRating()));
+                predicates.add(criteriaBuilder.equal(root.get("rating"), searchProductReviewRequest.getRating()));
             }
             return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
         };
@@ -122,6 +123,7 @@ public class ProductReviewService {
                 .photoProfileUser(productReview.getUser().getPhotoProfile())
                 .usagePeriod(productReview.getUsagePeriod())
                 .isRecommended(productReview.getIsRecommended())
+                .reviewId(productReview.getId())
                 .createdAt(productReview.getCreatedAt())
                 .rating(productReview.getRating())
                 .review(productReview.getReview())

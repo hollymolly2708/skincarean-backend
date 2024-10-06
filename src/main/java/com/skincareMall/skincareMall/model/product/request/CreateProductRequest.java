@@ -24,9 +24,9 @@ public class CreateProductRequest {
     @NotBlank
     private String thumbnailImage;
     private Boolean isPromo;
-    @NotBlank
+    @NotNull
     private Long brandId;
-    @NotBlank
+    @NotNull
     private Long categoryId;
     @Size(max = 100)
     @NotBlank

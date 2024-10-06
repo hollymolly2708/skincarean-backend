@@ -186,11 +186,13 @@ public class UserAuthService {
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
             return WebResponse.<UserResponse>builder().errors("Masalah keamanan saat memverifikasi akun").isSuccess(false).build();
-        } catch (com.google.common.io.BaseEncoding.DecodingException e){
+        } catch (com.google.common.io.BaseEncoding.DecodingException e) {
             return WebResponse.<UserResponse>builder().errors("Masalah I/O saat memverifikasi akun").isSuccess(false).build();
         } catch (IOException e) {
             e.printStackTrace();
             return WebResponse.<UserResponse>builder().errors("Masalah I/O saat memverifikasi akun").isSuccess(false).build();
+        } catch (Exception e) {
+            return WebResponse.<UserResponse>builder().errors("Kesalahan server saat memverifikasi akun").isSuccess(false).build();
         }
     }
 }
