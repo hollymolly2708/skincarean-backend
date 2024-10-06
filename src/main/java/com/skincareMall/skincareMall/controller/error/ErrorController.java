@@ -12,11 +12,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class ErrorController {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<WebResponse<String>> constrainViolationException(ConstraintViolationException constraintViolationException) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(WebResponse.<String>builder().errors(constraintViolationException.getMessage()).build());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(WebResponse.<String>builder().isSuccess(false).errors(constraintViolationException.getMessage()).build());
     }
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<WebResponse<String>> apiException(ResponseStatusException exception) {
-        return ResponseEntity.status(exception.getStatusCode()).body(WebResponse.<String>builder().errors(exception.getReason()).build());
+        return ResponseEntity.status(exception.getStatusCode()).body(WebResponse.<String>builder().isSuccess(false).errors(exception.getReason()).build());
     }
 }

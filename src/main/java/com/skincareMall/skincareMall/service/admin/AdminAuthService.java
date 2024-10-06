@@ -3,9 +3,7 @@ package com.skincareMall.skincareMall.service.admin;
 import com.skincareMall.skincareMall.entity.Admin;
 import com.skincareMall.skincareMall.model.admin.request.LoginAdminRequest;
 import com.skincareMall.skincareMall.model.admin.request.RegisterAdminRequest;
-import com.skincareMall.skincareMall.model.admin.response.AdminResponse;
 import com.skincareMall.skincareMall.model.user.response.TokenResponse;
-import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.repository.AdminRepository;
 import com.skincareMall.skincareMall.security.BCrypt;
 import com.skincareMall.skincareMall.utils.Utilities;
@@ -30,10 +28,10 @@ public class AdminAuthService {
     public void registerAdmin(RegisterAdminRequest registerAdminRequest) {
         validationService.validate(registerAdminRequest);
         if (adminRepository.existsById(registerAdminRequest.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already registered");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username sudah terdaftar");
         }
         if(!Objects.equals(registerAdminRequest.getPassword(), registerAdminRequest.getConfirmPassword())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "password and confirm password is'nt equals");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password dan confirm password tidak sama");
         }
 
         Admin admin = new Admin();
@@ -53,7 +51,7 @@ public class AdminAuthService {
     @Transactional
     public TokenResponse loginAdmin(LoginAdminRequest loginAdminRequest) {
         validationService.validate(loginAdminRequest);
-        Admin admin = adminRepository.findById(loginAdminRequest.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username or password is wrong"));
+        Admin admin = adminRepository.findById(loginAdminRequest.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username atau password salah"));
 
         if (BCrypt.checkpw(loginAdminRequest.getPassword(), admin.getPasswordAdmin())) {
             admin.setToken(UUID.randomUUID().toString());

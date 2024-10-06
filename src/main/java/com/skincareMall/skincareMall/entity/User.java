@@ -3,6 +3,7 @@ package com.skincareMall.skincareMall.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class User {
     private String address;
     @Column(name = "created_at")
     private Timestamp createdAt;
+    @Column(name = "photo_profile")
+    private String photoProfile;
     @Column(name = "last_updated_at")
     private Timestamp lastUpdatedAt;
     @Column(name = "token_expired_at")
@@ -33,6 +36,8 @@ public class User {
     @Column(name = "token_created_at")
     private Long tokenCreatedAt;
     private String phone;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductReview> productReviews;
 }

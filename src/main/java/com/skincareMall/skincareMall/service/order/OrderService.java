@@ -1,7 +1,6 @@
 package com.skincareMall.skincareMall.service.order;
 
 import com.skincareMall.skincareMall.entity.*;
-import com.skincareMall.skincareMall.mapper.ProductMapper;
 import com.skincareMall.skincareMall.model.order.request.OrderRequest;
 import com.skincareMall.skincareMall.model.order.response.OrderResponse;
 import com.skincareMall.skincareMall.model.payment_process.response.PaymentProcessResponse;
@@ -12,15 +11,13 @@ import com.skincareMall.skincareMall.repository.PaymentProcessRepository;
 import com.skincareMall.skincareMall.repository.ProductRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
-import jdk.jshell.execution.Util;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -38,16 +35,17 @@ public class OrderService {
     @Autowired
     private PaymentProcessRepository paymentProcessRepository;
 
+    @Transactional
     public void createOrder(User user, OrderRequest request) {
         validationService.validate(request);
-        System.out.println(request.getPaymentMethodId());
+
         if (Objects.nonNull(request)) {
-            Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is'nt found"));
-            PaymentMethod paymentMethod = paymentMethodRepository.findById(request.getPaymentMethodId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Payment Method is'nt found"));
+            Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
+            PaymentMethod paymentMethod = paymentMethodRepository.findById(request.getPaymentMethodId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Metode pembayaran tidak ditemukan"));
             if (product.getStok() == 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "stok product has been empty");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stok kosong");
             } else if (product.getStok() < request.getQuantity()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the quantity ordered is more than the available stock");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Jumlah quantity order melebihi dari jumlah stok yang tersedia");
             } else {
                 Long quantity = request.getQuantity();
                 BigDecimal price = product.getPrice();
@@ -82,12 +80,13 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders(User user) {
         List<Order> orders = orderRepository.findByUserUsernameUser(user.getUsernameUser());
 
         List<OrderResponse> orderResponses = orders.stream().map(order -> {
             String productId = order.getProduct().getId();
-            Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is'nt found"));
+            Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
             PaymentProcess paymentProcess = paymentProcessRepository.findByOrderId(order.getId());
 
             ProductResponse productResponse = ProductResponse
@@ -134,11 +133,12 @@ public class OrderService {
         return orderResponses;
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse detailOrderResponse(User user, String orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order is'nt found"));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order tidak ditemukan"));
         String productId = order.getProduct().getId();
 
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product is'nt found"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
 
         PaymentProcess paymentProcess = paymentProcessRepository.findByOrderId(orderId);
 
@@ -186,7 +186,7 @@ public class OrderService {
 
     }
 
-
+    @Transactional
     public void deleteOrder(User user, String orderId) {
         orderRepository.deleteById(orderId);
     }

@@ -91,7 +91,7 @@ public class ProductService {
                 .stream()
                 .map(productImage -> toProductImageResponse(productImage))
                 .toList();
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product is not found"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
 
         return toDetailProductResponse(product, productImageResponses);
     }
@@ -105,7 +105,7 @@ public class ProductService {
     @Transactional
     public DetailProductResponse updateProduct(Admin admin, String productId, UpdateProductRequest productRequest) {
         validationService.validate(productRequest);
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is not found"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
         System.out.println(product);
         System.out.println(product.getId());
         System.out.println(product.getDescription());
@@ -136,7 +136,7 @@ public class ProductService {
         if (Objects.nonNull(productRequest.getProductImages())) {
 //            List<ProductImage> productImages = productRequest.getProductImages().stream().map(productImageRequest -> toProductImage(productImageRequest)).toList();
             for (UpdateProductImageRequest updateProductImageRequest : productRequest.getProductImages()) {
-                ProductImage productImageByIdAndProductId = productImageRepository.findByIdAndProductId(updateProductImageRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is not found"));
+                ProductImage productImageByIdAndProductId = productImageRepository.findByIdAndProductId(updateProductImageRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
                 if (productImageByIdAndProductId != null) {
                     productImageByIdAndProductId.setImageUrl(updateProductImageRequest.getImageUrl());
                     productImageRepository.save(productImageByIdAndProductId);

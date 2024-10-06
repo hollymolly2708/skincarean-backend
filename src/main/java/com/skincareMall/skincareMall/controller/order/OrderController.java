@@ -23,7 +23,7 @@ public class OrderController {
     ){
 
         orderService.createOrder(user, orderRequest);
-        return WebResponse.<String>builder().data("Order has been created").build();
+        return WebResponse.<String>builder().data("Order berhasil dibuat").build();
     }
 
     @DeleteMapping(path = "api/orders/{orderId}")

@@ -27,7 +27,7 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> createProduct(Admin admin, @RequestBody CreateProductRequest createProductRequest) {
         productService.createProduct(admin, createProductRequest);
-        return WebResponse.<String>builder().data("Product berhasil ditambahkan").build();
+        return WebResponse.<String>builder().data("Produk berhasil ditambahkan").build();
 
     }
 
@@ -46,7 +46,7 @@ public class ProductController {
     @DeleteMapping(path = "/api/products/{productId}")
     public WebResponse<String> deleteProductById(Admin admin, @PathVariable("productId") String productId) {
         productService.deleteProductById(productId);
-        return WebResponse.<String>builder().data("Product berhasil dihapus").build();
+        return WebResponse.<String>builder().data("Produk berhasil dihapus").build();
     }
 
     @PatchMapping(path = "/api/products/{productId}")
