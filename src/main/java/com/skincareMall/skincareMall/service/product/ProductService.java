@@ -1,10 +1,10 @@
 package com.skincareMall.skincareMall.service.product;
 
-import com.skincareMall.skincareMall.entity.Admin;
-import com.skincareMall.skincareMall.entity.Product;
-import com.skincareMall.skincareMall.entity.ProductImage;
+import com.skincareMall.skincareMall.entity.*;
 import com.skincareMall.skincareMall.model.product.request.*;
 import com.skincareMall.skincareMall.model.product.response.*;
+import com.skincareMall.skincareMall.repository.BrandRepository;
+import com.skincareMall.skincareMall.repository.CategoryRepository;
 import com.skincareMall.skincareMall.repository.ProductImageRepository;
 import com.skincareMall.skincareMall.repository.ProductRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
@@ -33,6 +33,10 @@ public class ProductService {
     private ValidationService validationService;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private BrandRepository brandRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ProductImageRepository productImageRepository;
@@ -40,6 +44,10 @@ public class ProductService {
     @Transactional
     public void createProduct(Admin admin, CreateProductRequest createProductRequest) {
         validationService.validate(createProductRequest);
+
+        Brand brand = brandRepository.findById(createProductRequest.getBrandId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Brand tidak ditemukan"));
+        Category category = categoryRepository.findById(createProductRequest.getCategoryId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category tidak ditemukan"));
+
 
         // Membuat dan menyimpan product terlebih dahulu
         Product product = new Product();
@@ -54,9 +62,9 @@ public class ProductService {
         product.setBpomCode(createProductRequest.getBpomCode());
         product.setSize(createProductRequest.getSize());
         product.setStok(createProductRequest.getStok());
-        product.setBrands(createProductRequest.getBrands());
+        product.setBrand(brand);
         product.setPrice(requestOriginalPrice.subtract(requestOriginalPrice.multiply(requestDiscount.divide(BigDecimal.valueOf(100)))));
-        product.setCategory(createProductRequest.getCategory());
+        product.setCategory(category);
         product.setOriginalPrice(createProductRequest.getOriginalPrice());
         product.setDiscount(createProductRequest.getDiscount());
         product.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
@@ -106,6 +114,8 @@ public class ProductService {
     public DetailProductResponse updateProduct(Admin admin, String productId, UpdateProductRequest productRequest) {
         validationService.validate(productRequest);
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
+
+
         System.out.println(product);
         System.out.println(product.getId());
         System.out.println(product.getDescription());
@@ -125,9 +135,9 @@ public class ProductService {
             product.setPrice(productRequest.getOriginalPrice().subtract(productRequest.getOriginalPrice().multiply(productRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
             System.out.println(productRequest.getDiscount());
         }
-        if (Objects.nonNull(productRequest.getBrands())) {
-            product.setBrands(productRequest.getBrands());
-            System.out.println(productRequest.getBrands());
+        if (Objects.nonNull(productRequest.getBrandId())) {
+            Brand brand = brandRepository.findById(productRequest.getBrandId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Brand tidak ditemukan"));
+            product.setBrand(brand);
         }
         if (Objects.nonNull(productRequest.getBpomCode())) {
             product.setBpomCode(productRequest.getBpomCode());
@@ -146,9 +156,9 @@ public class ProductService {
             System.out.println(productRequest.getProductImages());
         }
 
-        if (Objects.nonNull(productRequest.getCategory())) {
-            product.setCategory(productRequest.getCategory());
-            System.out.println(productRequest.getCategory());
+        if (Objects.nonNull(productRequest.getCategoryId())) {
+            Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category tidak ditemukan"));
+            product.setCategory(category);
         }
         if (Objects.nonNull(productRequest.getIsPromo())) {
             product.setIsPromo(productRequest.getIsPromo());
@@ -162,6 +172,7 @@ public class ProductService {
             product.setStok(productRequest.getStok());
             System.out.println(productRequest.getStok());
         }
+        product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
 
         productRepository.save(product);
         List<ProductImageResponse> productImageResponse = product.getProductImages().stream().map(productImage -> toProductImageResponse(productImage)).toList();

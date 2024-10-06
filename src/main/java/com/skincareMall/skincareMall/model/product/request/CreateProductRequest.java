@@ -25,11 +25,9 @@ public class CreateProductRequest {
     private String thumbnailImage;
     private Boolean isPromo;
     @NotBlank
-    @Size(max = 100)
-    private String brands;
+    private Long brandId;
     @NotBlank
-    @Size(max = 100)
-    private String category;
+    private Long categoryId;
     @Size(max = 100)
     @NotBlank
     private String bpomCode;

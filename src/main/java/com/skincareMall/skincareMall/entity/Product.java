@@ -42,8 +42,6 @@ public class Product {
 
     private BigDecimal discount;
 
-    private String category;
-    private String brands;
 
     @Column(name = "original_price")
     private BigDecimal originalPrice;
@@ -67,5 +65,12 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductReview> productReviews;
 
+    @ManyToOne
+    @JoinColumn(name = "brand_id", referencedColumnName = "id")
+    private Brand brand;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 
 }

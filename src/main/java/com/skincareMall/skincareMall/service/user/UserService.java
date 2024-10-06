@@ -54,6 +54,7 @@ public class UserService {
         if (Objects.nonNull(request.getAddress())) {
             user.setAddress(request.getAddress());
         }
+        user.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
         try {
             userRepository.save(user);
             return WebResponse

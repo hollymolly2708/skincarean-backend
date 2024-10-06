@@ -21,10 +21,8 @@ public class UpdateProductRequest {
     @Size(max = 255)
     private String thumbnailImage;
     private Boolean isPromo;
-    @Size(max = 100)
-    private String brands;
-    @Size(max = 100)
-    private String category;
+    private Long brandId;
+    private Long categoryId;
     @Size(max = 100)
     private String bpomCode;
     @Size(max = 100)

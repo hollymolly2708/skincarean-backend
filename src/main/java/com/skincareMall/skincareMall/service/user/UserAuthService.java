@@ -16,7 +16,6 @@ import com.skincareMall.skincareMall.repository.UserRepository;
 import com.skincareMall.skincareMall.security.BCrypt;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
