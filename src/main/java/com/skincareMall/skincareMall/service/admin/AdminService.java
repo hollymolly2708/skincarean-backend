@@ -4,6 +4,7 @@ import com.skincareMall.skincareMall.entity.Admin;
 import com.skincareMall.skincareMall.model.admin.request.UpdateAdminRequest;
 import com.skincareMall.skincareMall.model.admin.response.AdminResponse;
 import com.skincareMall.skincareMall.repository.AdminRepository;
+import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ public class AdminService {
         if (Objects.nonNull(updateAdminRequest.getEmail())) {
             admin.setEmail(updateAdminRequest.getEmail());
         }
+        admin.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
         adminRepository.save(admin);
         return AdminResponse.builder()
                 .fullName(admin.getFullName())

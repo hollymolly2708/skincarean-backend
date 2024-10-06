@@ -81,6 +81,7 @@ public class ProductReviewService {
         if (Objects.nonNull(updateProductReviewRequest.getRating())) {
             productReview.setRating(updateProductReviewRequest.getRating());
         }
+        productReview.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
         productReviewRepository.save(productReview);
     }
 

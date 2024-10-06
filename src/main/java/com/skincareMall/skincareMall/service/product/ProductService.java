@@ -172,6 +172,7 @@ public class ProductService {
             product.setStok(productRequest.getStok());
             System.out.println(productRequest.getStok());
         }
+        product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
 
         productRepository.save(product);
         List<ProductImageResponse> productImageResponse = product.getProductImages().stream().map(productImage -> toProductImageResponse(productImage)).toList();
