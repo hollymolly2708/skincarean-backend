@@ -42,13 +42,17 @@ public class Product {
 
     private BigDecimal discount;
 
+    @Column(name = "is_popular_product")
+    private Boolean isPopularProduct;
+
 
     @Column(name = "original_price")
     private BigDecimal originalPrice;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
-
+    @Column(name = "ingredient")
+    private String ingredient;
     @Column(name = "last_updated_at")
     private Timestamp lastUpdatedAt;
 
@@ -70,8 +74,8 @@ public class Product {
     private Brand brand;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
+    @JoinColumn(name = "category_item_id", referencedColumnName = "id")
+    private CategoryItem categoryItem;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cart> carts;

@@ -119,7 +119,7 @@ Request Header :
       "price": 75000.00,
       "discount": 25.00,
       "brands": "Skintific",
-      "category": "Serum",
+      "categoryItem": "Serum",
       "productImage": [
         {
           "id": 4,

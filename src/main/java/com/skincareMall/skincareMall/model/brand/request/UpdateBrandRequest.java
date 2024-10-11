@@ -29,5 +29,6 @@ public class UpdateBrandRequest {
     @Size(max = 255)
     private String contactEmailUrl;
     private String address;
+    private Boolean isPopularBrand;
 
 }

@@ -41,8 +41,14 @@ public class BrandController {
     }
 
     @PatchMapping(path = "/api/brands/{brandId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<BrandResponse> updateBrand(Admin admin, @PathVariable("brandId") Long brandId,@RequestBody UpdateBrandRequest updateBrandRequest) {
+    public WebResponse<BrandResponse> updateBrand(Admin admin, @PathVariable("brandId") Long brandId, @RequestBody UpdateBrandRequest updateBrandRequest) {
         BrandResponse response = brandService.updateBrand(admin, brandId, updateBrandRequest);
         return WebResponse.<BrandResponse>builder().data(response).build();
+    }
+
+    @GetMapping(path = "/api/brands/top-brands", produces = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<List<BrandResponse>> getAllBrandsByTopBrand() {
+        List<BrandResponse> brandsByIsTopBrand = brandService.getBrandsByIsTopBrand();
+        return WebResponse.<List<BrandResponse>>builder().data(brandsByIsTopBrand).build();
     }
 }

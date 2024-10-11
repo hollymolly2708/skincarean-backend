@@ -1,9 +1,12 @@
 package com.skincareMall.skincareMall.controller.category;
 
 import com.skincareMall.skincareMall.entity.Admin;
+import com.skincareMall.skincareMall.model.category.request.CreateCategoryItemRequest;
 import com.skincareMall.skincareMall.model.category.request.CreateCategoryRequest;
+import com.skincareMall.skincareMall.model.category.request.UpdateCategoryItemRequest;
 import com.skincareMall.skincareMall.model.category.request.UpdateCategoryRequest;
 import com.skincareMall.skincareMall.model.category.response.CategoryResponse;
+import com.skincareMall.skincareMall.model.category.response.DetailCategoryResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.category.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +33,15 @@ public class CategoryController {
     }
 
     @GetMapping(path = "/api/categories/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<CategoryResponse> getDetailCategory(@PathVariable("categoryId") Long categoryId) {
-        CategoryResponse response = categoryService.getDetailCategory(categoryId);
-        return WebResponse.<CategoryResponse>builder().data(response).build();
+    public WebResponse<DetailCategoryResponse> getDetailCategory(@PathVariable("categoryId") Long categoryId) {
+        DetailCategoryResponse response = categoryService.getDetailCategory(categoryId);
+        return WebResponse.<DetailCategoryResponse>builder().data(response).build();
     }
-
+//
     @PatchMapping(path = "/api/categories/{categoryId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<CategoryResponse> updateCategory(Admin admin, @PathVariable("categoryId") Long categoryId, @RequestBody UpdateCategoryRequest updateCategoryRequest) {
-        CategoryResponse response = categoryService.updateCategory(admin, categoryId, updateCategoryRequest);
-        return WebResponse.<CategoryResponse>builder().data(response).build();
+    public WebResponse<DetailCategoryResponse> updateCategory(Admin admin, @PathVariable("categoryId") Long categoryId, @RequestBody UpdateCategoryRequest updateCategoryRequest) {
+        DetailCategoryResponse response = categoryService.updateCategory(admin, categoryId, updateCategoryRequest);
+        return WebResponse.<DetailCategoryResponse>builder().data(response).build();
     }
 
     @DeleteMapping(path = "/api/categories/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)

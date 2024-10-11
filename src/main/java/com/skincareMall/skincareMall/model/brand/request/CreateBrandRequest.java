@@ -31,5 +31,6 @@ public class CreateBrandRequest {
     @Size(max = 255)
     private String contactEmailUrl;
     private String address;
+    private Boolean isTopBrand;
 
 }

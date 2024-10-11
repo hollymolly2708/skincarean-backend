@@ -1,10 +1,11 @@
 package com.skincareMall.skincareMall.service.product;
 
 import com.skincareMall.skincareMall.entity.*;
+import com.skincareMall.skincareMall.mapper.ProductMapper;
 import com.skincareMall.skincareMall.model.product.request.*;
 import com.skincareMall.skincareMall.model.product.response.*;
 import com.skincareMall.skincareMall.repository.BrandRepository;
-import com.skincareMall.skincareMall.repository.CategoryRepository;
+import com.skincareMall.skincareMall.repository.CategoryItemRepository;
 import com.skincareMall.skincareMall.repository.ProductImageRepository;
 import com.skincareMall.skincareMall.repository.ProductRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
@@ -36,7 +37,7 @@ public class ProductService {
     @Autowired
     private BrandRepository brandRepository;
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryItemRepository categoryItemRepository;
 
     @Autowired
     private ProductImageRepository productImageRepository;
@@ -46,7 +47,7 @@ public class ProductService {
         validationService.validate(createProductRequest);
 
         Brand brand = brandRepository.findById(createProductRequest.getBrandId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Brand tidak ditemukan"));
-        Category category = categoryRepository.findById(createProductRequest.getCategoryId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category tidak ditemukan"));
+        CategoryItem categoryItem = categoryItemRepository.findById(createProductRequest.getCategoryId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category tidak ditemukan"));
 
 
         // Membuat dan menyimpan product terlebih dahulu
@@ -60,11 +61,13 @@ public class ProductService {
         product.setDescription(createProductRequest.getProductDescription());
         product.setIsPromo(createProductRequest.getIsPromo());
         product.setBpomCode(createProductRequest.getBpomCode());
+        product.setIngredient(createProductRequest.getIngredient());
         product.setSize(createProductRequest.getSize());
         product.setStok(createProductRequest.getStok());
+        product.setIsPopularProduct(createProductRequest.getIsPopularProduct());
         product.setBrand(brand);
         product.setPrice(requestOriginalPrice.subtract(requestOriginalPrice.multiply(requestDiscount.divide(BigDecimal.valueOf(100)))));
-        product.setCategory(category);
+        product.setCategoryItem(categoryItem);
         product.setOriginalPrice(createProductRequest.getOriginalPrice());
         product.setDiscount(createProductRequest.getDiscount());
         product.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
@@ -90,6 +93,16 @@ public class ProductService {
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(product -> toProductResponse(product)).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAllPopularProducts() {
+        List<ProductResponse> popularProducts = productRepository.findAllByIsPopularProduct(true).stream().map(
+                products ->
+                        ProductMapper.toProductResponse(products)
+        ).toList();
+
+        return popularProducts;
     }
 
 
@@ -157,8 +170,8 @@ public class ProductService {
         }
 
         if (Objects.nonNull(productRequest.getCategoryId())) {
-            Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category tidak ditemukan"));
-            product.setCategory(category);
+            CategoryItem categoryItem = categoryItemRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category tidak ditemukan"));
+            product.setCategoryItem(categoryItem);
         }
         if (Objects.nonNull(productRequest.getIsPromo())) {
             product.setIsPromo(productRequest.getIsPromo());
@@ -171,6 +184,14 @@ public class ProductService {
         if (Objects.nonNull(productRequest.getStok())) {
             product.setStok(productRequest.getStok());
             System.out.println(productRequest.getStok());
+        }
+
+        if (Objects.nonNull(productRequest.getIngredient())) {
+            product.setIngredient(productRequest.getIngredient());
+        }
+
+        if (Objects.nonNull(productRequest.getIsPopularProduct())) {
+            product.setIsPopularProduct(productRequest.getIsPopularProduct());
         }
         product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
 

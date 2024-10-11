@@ -16,6 +16,8 @@ import com.skincareMall.skincareMall.repository.UserRepository;
 import com.skincareMall.skincareMall.security.BCrypt;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
+import lombok.extern.java.Log;
+import org.hibernate.validator.internal.engine.messageinterpolation.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -84,6 +86,10 @@ public class UserAuthService {
         validationService.validate(loginUserRequest);
         User user = userRepository.findById(loginUserRequest.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username atau password salah"));
 
+
+        if (user.getPasswordUser() == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "username atau password salah");
+        }
         if (BCrypt.checkpw(loginUserRequest.getPassword(), user.getPasswordUser())) {
             user.setToken(UUID.randomUUID().toString());
             user.setTokenExpiredAt(next30days());
@@ -124,7 +130,7 @@ public class UserAuthService {
 
 
     @Transactional
-    public WebResponse<UserResponse> verifyToken(GoogleLoginTokenRequest googleLoginTokenRequest) {
+    public WebResponse<TokenResponse> verifyToken(GoogleLoginTokenRequest googleLoginTokenRequest) {
         validationService.validate(googleLoginTokenRequest);
         String idTokenString = googleLoginTokenRequest.getToken();
 
@@ -162,20 +168,12 @@ public class UserAuthService {
                         }
                 );
 
-                return WebResponse.<UserResponse>builder()
-                        .data(UserResponse
+                return WebResponse.<TokenResponse>builder()
+                        .data(TokenResponse
                                 .builder()
-                                .email(user.getEmail())
-                                .profilePicture(user.getPhotoProfile())
-                                .fullName(user.getFullName())
                                 .token(user.getToken())
-                                .phone(user.getPhone())
-                                .lastUpdatedAt(user.getLastUpdatedAt())
-                                .createdAt(user.getCreatedAt())
-                                .address(user.getAddress())
-                                .tokenExpiredAt(Utilities.changeFormatToTimeStamp(user.getTokenExpiredAt()))
-                                .tokenCreatedAt(Utilities.changeFormatToTimeStamp(user.getTokenCreatedAt()))
-                                .username(user.getEmail())
+                                .tokenExpiredAt(next30days())
+                                .tokenCreatedAt(System.currentTimeMillis())
                                 .build())
                         .isSuccess(true)
                         .build();
@@ -185,14 +183,14 @@ public class UserAuthService {
             }
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
-            return WebResponse.<UserResponse>builder().errors("Masalah keamanan saat memverifikasi akun").isSuccess(false).build();
+            return WebResponse.<TokenResponse>builder().errors("Masalah keamanan saat memverifikasi akun").isSuccess(false).build();
         } catch (com.google.common.io.BaseEncoding.DecodingException e) {
-            return WebResponse.<UserResponse>builder().errors("Masalah I/O saat memverifikasi akun").isSuccess(false).build();
+            return WebResponse.<TokenResponse>builder().errors("Masalah I/O saat memverifikasi akun").isSuccess(false).build();
         } catch (IOException e) {
             e.printStackTrace();
-            return WebResponse.<UserResponse>builder().errors("Masalah I/O saat memverifikasi akun").isSuccess(false).build();
+            return WebResponse.<TokenResponse>builder().errors("Masalah I/O saat memverifikasi akun").isSuccess(false).build();
         } catch (Exception e) {
-            return WebResponse.<UserResponse>builder().errors("Kesalahan server saat memverifikasi akun").isSuccess(false).build();
+            return WebResponse.<TokenResponse>builder().errors("Kesalahan server saat memverifikasi akun").isSuccess(false).build();
         }
     }
 }

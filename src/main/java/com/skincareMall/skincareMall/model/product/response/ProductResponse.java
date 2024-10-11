@@ -23,6 +23,8 @@ public class ProductResponse {
     private Long stok;
     private BigDecimal originalPrice;
     private BigDecimal price;
+    private Boolean isPopularProduct;
+    private String ingredient;
     private BigDecimal discount;
     private String brandName;
     private String categoryName;

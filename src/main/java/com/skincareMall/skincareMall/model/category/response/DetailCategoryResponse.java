@@ -1,6 +1,6 @@
 package com.skincareMall.skincareMall.model.category.response;
 
-
+import com.skincareMall.skincareMall.entity.CategoryItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryResponse {
+public class DetailCategoryResponse {
     private Long id;
-    private String categoryImage;
     private String name;
+    private String categoryImage;
     private Timestamp createdAt;
     private Timestamp lastUpdatedAt;
-
+    private List<CategoryItemResponse> categoryItems;
 }

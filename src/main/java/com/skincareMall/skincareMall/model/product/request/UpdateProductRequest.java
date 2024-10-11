@@ -24,7 +24,10 @@ public class UpdateProductRequest {
     private Long brandId;
     private Long categoryId;
     @Size(max = 100)
+    @Size(max = 255)
+    private String ingredient;
     private String bpomCode;
+    private Boolean isPopularProduct;
     @Size(max = 100)
     private String size;
     @Digits(integer = 2, fraction = 0, message = "Discount harus berupa angka dengan maksimal 2 digit dan 0 desimal")

@@ -66,4 +66,10 @@ public class ProductController {
         return WebResponse.<List<ProductResponse>>builder().data(productResponses.getContent()).paging(PagingResponse.builder()
                 .currentPage(productResponses.getNumber()).totalPage(productResponses.getTotalPages()).size(productResponses.getSize()).build()).build();
     }
+
+    @GetMapping(path = "/api/products/popular-products", produces = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<List<ProductResponse>> getAllPopularProducts() {
+        List<ProductResponse> allPopularProducts = productService.getAllPopularProducts();
+        return WebResponse.<List<ProductResponse>>builder().data(allPopularProducts).build();
+    }
 }

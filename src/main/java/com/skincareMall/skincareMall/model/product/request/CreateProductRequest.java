@@ -26,8 +26,10 @@ public class CreateProductRequest {
     private Boolean isPromo;
     @NotNull
     private Long brandId;
-    @NotNull
+    private Boolean isPopularProduct;
     private Long categoryId;
+    @Size(max = 255)
+    private String ingredient;
     @Size(max = 100)
     @NotBlank
     private String bpomCode;

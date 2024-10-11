@@ -15,7 +15,7 @@ public class Utilities {
     }
 
     public static Long next30days() {
-        return System.currentTimeMillis() + (1000 * 16 * 24 * 30);
+        return System.currentTimeMillis() + (1000 * 60 * 24 * 30);
     }
 
     public static String generatePaymentCode(int length){
