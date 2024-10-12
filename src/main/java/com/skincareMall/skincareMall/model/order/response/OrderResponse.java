@@ -23,6 +23,7 @@ public class OrderResponse {
     private Long quantity;
     private String description;
     private BigDecimal shippingCost;
+    private String orderStatus;
     private BigDecimal tax;
     private BigDecimal totalPrice;
     private Timestamp createdAt;

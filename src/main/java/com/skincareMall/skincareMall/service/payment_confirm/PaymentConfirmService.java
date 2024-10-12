@@ -23,14 +23,18 @@ public class PaymentConfirmService {
     @Transactional
     public void confirmPayment(String paymentCode) {
         PaymentProcess paymentProcess = paymentProcessRepository.findByPaymentCode(paymentCode).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kode pembayaran tidak ditemukan"));
+
+
         if (Objects.equals(paymentProcess.getPaymentStatus(), "Lunas")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kode pembayaran tidak valid lagi");
         }
         Order order = orderRepository.findById(paymentProcess.getOrder().getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User tidak ditemukan"));
 
         paymentProcess.setPaymentStatus("Lunas");
+        order.setOrderStatus("Selesai");
         paymentProcess.setPaidDate(Utilities.changeFormatToTimeStamp());
         paymentProcess.setTotalPaid(order.getTotalPrice());
+        orderRepository.save(order);
         paymentProcessRepository.save(paymentProcess);
     }
 }

@@ -23,6 +23,8 @@ public class Order {
     private BigDecimal totalPrice;
     @Column(name = "shipping_address")
     private String shippingAddress;
+    @Column(name = "order_status")
+    private String orderStatus;
     @Column(name = "shipping_cost")
     private BigDecimal shippingCost;
     private BigDecimal tax;
@@ -38,6 +40,6 @@ public class Order {
     private Product product;
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private PaymentProcess paymentProcess;
-
-
+//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,orphanRemoval = true)
+//    private List<Cart> carts;
 }

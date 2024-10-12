@@ -16,9 +16,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class OrderRequest {
-    @Size(max = 100)
-    @NotBlank
-    private String paymentStatus;
     @NotBlank
     @Size(max = 255)
     private String shippingAddress;

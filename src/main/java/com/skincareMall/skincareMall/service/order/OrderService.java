@@ -59,6 +59,7 @@ public class OrderService {
                 order.setTotalPrice(price.multiply(BigDecimal.valueOf(quantity)).add(tax).add(shippingCost));
                 order.setQuantity(request.getQuantity());
                 order.setDescription(request.getDescription());
+                order.setOrderStatus("Menunggu Pembayaran");
                 order.setShippingCost(request.getShippingCost());
                 order.setTax(request.getTax());
                 order.setShippingAddress(request.getShippingAddress());
@@ -70,7 +71,7 @@ public class OrderService {
                 if (request.getPaymentMethodId() != null) {
                     PaymentProcess paymentProcess = new PaymentProcess();
                     paymentProcess.setOrder(order);
-                    paymentProcess.setPaymentStatus("Menunggu Pembayaran");
+                    paymentProcess.setPaymentStatus("Belum dibayar");
                     paymentProcess.setPaymentMethod(paymentMethod);
                     paymentProcess.setPaymentCode(Utilities.generatePaymentCode(12));
                     paymentProcessRepository.save(paymentProcess);
@@ -118,6 +119,7 @@ public class OrderService {
                     .product(productResponse)
                     .orderId(order.getId())
                     .productId(product.getId())
+                    .orderStatus(order.getOrderStatus())
                     .totalPrice(order.getTotalPrice())
                     .shippingAddress(order.getShippingAddress())
                     .description(order.getDescription())
@@ -170,6 +172,7 @@ public class OrderService {
                 .orderId(order.getId())
                 .tax(order.getTax())
                 .quantity(order.getQuantity())
+                .orderStatus(order.getOrderStatus())
                 .description(order.getDescription())
                 .product(productResponse)
                 .shippingCost(order.getShippingCost())
