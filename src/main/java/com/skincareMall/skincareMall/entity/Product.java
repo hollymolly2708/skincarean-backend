@@ -78,6 +78,6 @@ public class Product {
     private CategoryItem categoryItem;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cart> carts;
+    private List<CartItem> carts;
 
 }
