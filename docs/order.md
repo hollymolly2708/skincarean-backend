@@ -106,7 +106,7 @@ Request Header :
     "shippingCost": 20000,
     "tax": 100000,
     "created_at": "27/08/2000 22:10:05",
-    "expired_at": "27/08/2000 22:10:05", //24 jam setelah order dibuat
+    "expired_at": "27/08/2000 22:10:05", //24 jam setelah orderItem dibuat
     "detail_product": {
       "productName": "Skintific Serum 125",
       "productDescription": "Serum Skintific 125g untuk meremajakan kulit",
@@ -160,7 +160,7 @@ Response Body (Success) :
 
 ```json
 {
-  "data": "order berhasil dihapus"
+  "data": "orderItem berhasil dihapus"
 }
 ```
 

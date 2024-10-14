@@ -36,7 +36,6 @@ public class User {
     @Column(name = "token_created_at")
     private Long tokenCreatedAt;
     private String phone;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

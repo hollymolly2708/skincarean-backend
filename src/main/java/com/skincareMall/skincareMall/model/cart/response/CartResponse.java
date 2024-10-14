@@ -1,5 +1,6 @@
 package com.skincareMall.skincareMall.model.cart.response;
 
+import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CartResponse {
+    private Long id;
     private BigDecimal total;
-    private List<CartItemResponse> cartItems;
+    private ProductResponse product;
+    private Long quantity;
 }
