@@ -146,32 +146,35 @@ public class UserAuthService {
                 String name = (String) payload.get("name");
                 String pictureUrl = (String) payload.get("picture");
 
-                Optional<User> userByEmail = userRepository.findByEmail(email);
+                User userByEmail = userRepository.findByEmail(email).orElse(null);
 
-                User user = userByEmail.orElseGet(() -> {
-                            User addUser = new User();
-                            addUser.setFullName(name);
-                            addUser.setUsernameUser(email);
-                            addUser.setEmail(email);
-                            addUser.setCreatedAt(Utilities.changeFormatToTimeStamp());
-                            addUser.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
-                            addUser.setToken(UUID.randomUUID().toString());
-                            addUser.setTokenCreatedAt(System.currentTimeMillis());
-                            addUser.setTokenExpiredAt(Utilities.next30days());
-                            if (pictureUrl != null) {
-                                addUser.setPhotoProfile(pictureUrl);
-                            }
+                if (userByEmail == null) {
+                    User addUser = new User();
+                    addUser.setFullName(name);
+                    addUser.setToken(UUID.randomUUID().toString());
+                    addUser.setUsernameUser(email);
+                    addUser.setEmail(email);
+                    addUser.setCreatedAt(Utilities.changeFormatToTimeStamp());
+                    addUser.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
+                    addUser.setTokenCreatedAt(System.currentTimeMillis());
+                    addUser.setTokenExpiredAt(Utilities.next30days());
+                    if (pictureUrl != null) {
+                        addUser.setPhotoProfile(pictureUrl);
+                    }
+                    userRepository.save(addUser);
+                } else {
+                    userByEmail.setToken(UUID.randomUUID().toString());
+                    userByEmail.setLastUpdatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
+                    userByEmail.setTokenExpiredAt(Utilities.next30days());
+                    userRepository.save(userByEmail);
+                }
 
-                            userRepository.save(addUser);
-                            return addUser;
 
-                        }
-                );
-
+                assert userByEmail != null;
                 return WebResponse.<TokenResponse>builder()
                         .data(TokenResponse
                                 .builder()
-                                .token(user.getToken())
+                                .token(userByEmail.getToken())
                                 .tokenExpiredAt(next30days())
                                 .tokenCreatedAt(System.currentTimeMillis())
                                 .build())

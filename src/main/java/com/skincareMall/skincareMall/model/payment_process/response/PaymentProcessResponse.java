@@ -17,6 +17,7 @@ public class PaymentProcessResponse {
     private String paymentCode;
     private String paymentStatus;
     private Long paymentMethodId;
+    private String paymentMethodName;
     private Timestamp paidDate;
     private BigDecimal totalPaid;
 }

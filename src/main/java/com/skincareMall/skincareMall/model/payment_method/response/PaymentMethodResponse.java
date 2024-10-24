@@ -13,4 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PaymentMethodResponse {
     private Long id;
     private String name;
+    private String image;
+    private String description;
 }

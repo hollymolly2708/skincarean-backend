@@ -2,7 +2,7 @@
 
 ## CREATE CART
 
-Endpoint : POST /api/cart
+Endpoint : POST /api/cartItem
 
 Request Header :
 
@@ -35,7 +35,7 @@ Response Body (Failed) :
 
 ## GET ALL CART
 
-Endpoint : GET /api/cart
+Endpoint : GET /api/cartItem
 
 - X-API-TOKEN : Token
 
@@ -63,7 +63,7 @@ Response Body (Failed) :
 
 ## SEARCH CART
 
-Endpoint : GET /api/cart
+Endpoint : GET /api/cartItem
 
 Request Header :
 
@@ -92,7 +92,7 @@ Response Body (Failed) :
 
 ## DELETE CART
 
-Endpoint : DELETE /api/cart/{cartId}
+Endpoint : DELETE /api/cartItem/{cartId}
 
 Request Header :
 

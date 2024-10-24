@@ -9,8 +9,6 @@ import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.repository.BrandRepository;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

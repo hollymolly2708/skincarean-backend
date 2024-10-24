@@ -1,20 +1,20 @@
 package com.skincareMall.skincareMall.model.cart.response;
 
+import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class CartResponse {
+@NoArgsConstructor
+@Builder
+public class CartItemResponse {
     private Long id;
+    private BigDecimal total;
+    private ProductResponse product;
     private Long quantity;
-    private BigDecimal totalPrice;
-    private List<CartItemResponse> cartItems;
 }

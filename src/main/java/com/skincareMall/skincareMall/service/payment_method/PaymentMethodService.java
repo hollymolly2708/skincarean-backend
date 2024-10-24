@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PaymentMethodService {
@@ -31,6 +32,7 @@ public class PaymentMethodService {
         }
         PaymentMethod paymentMethod2 = new PaymentMethod();
         paymentMethod2.setName(createPaymentMethodRequest.getName());
+        paymentMethod2.setDescription(createPaymentMethodRequest.getDescription());
         paymentMethod2.setImage(createPaymentMethodRequest.getImage());
         paymentMethodRepository.save(paymentMethod2);
 
@@ -40,7 +42,7 @@ public class PaymentMethodService {
     public List<PaymentMethodResponse> getAllPaymentMethod() {
         List<PaymentMethod> paymentMethods = paymentMethodRepository.findAll();
         return paymentMethods.stream().map(paymentMethod -> {
-            return PaymentMethodResponse.builder().id(paymentMethod.getId()).name(paymentMethod.getName()).build();
+            return PaymentMethodResponse.builder().id(paymentMethod.getId()).name(paymentMethod.getName()).image(paymentMethod.getImage()).description(paymentMethod.getDescription()).build();
         }).toList();
     }
 
@@ -53,7 +55,20 @@ public class PaymentMethodService {
     @Transactional
     public PaymentMethodResponse updatePaymentMethod(Admin admin, Long paymentMethodId, UpdatePaymentMethodRequest request) {
         PaymentMethod paymentMethod = paymentMethodRepository.findById(paymentMethodId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Metode pembayaran tidak ditemukan"));
-        paymentMethod.setName(request.getName());
+
+        if(Objects.nonNull(request.getImage())){
+            paymentMethod.setImage(request.getImage());
+        }
+
+        if(Objects.nonNull(request.getName())){
+            paymentMethod.setName(request.getName());
+        }
+
+        if(Objects.nonNull(request.getDescription())){
+            paymentMethod.setDescription(request.getDescription());
+        }
+
+
         paymentMethodRepository.save(paymentMethod);
 
        return PaymentMethodResponse.builder()

@@ -1,8 +1,8 @@
 package com.skincareMall.skincareMall.controller.cart;
 
-import com.skincareMall.skincareMall.entity.Cart;
 import com.skincareMall.skincareMall.entity.User;
 import com.skincareMall.skincareMall.model.cart.request.CreateCartRequest;
+import com.skincareMall.skincareMall.model.cart.response.CartItemResponse;
 import com.skincareMall.skincareMall.model.cart.response.CartResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.cart.CartService;
@@ -17,7 +17,6 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-
     @PostMapping(path = "/api/carts", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> addToCart(User user, @RequestBody CreateCartRequest createCartRequest) {
         cartService.addToCartFromDetailProduct(user, createCartRequest);
@@ -25,15 +24,15 @@ public class CartController {
     }
 
     @GetMapping(path = "/api/carts", produces = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<List<CartResponse>> getCart(User user) {
-        List<CartResponse> cartResponse = cartService.getAllCarts(user);
-        return WebResponse.<List<CartResponse>>builder().data(cartResponse).build();
+    public WebResponse<CartResponse> getCart(User user) {
+        CartResponse cartResponse = cartService.getAllCarts(user);
+        return WebResponse.<CartResponse>builder().data(cartResponse).build();
     }
 
     @PostMapping(path = "/api/carts/{cartId}/plus-quantity")
-    public WebResponse<CartResponse> plusQuantity(User user, @PathVariable("cartId") Long cartId) {
-        CartResponse cartResponse = cartService.plusQuantity(user, cartId);
-        return WebResponse.<CartResponse>builder().data(cartResponse).build();
+    public WebResponse<String> plusQuantity(User user, @PathVariable("cartId") Long cartId) {
+        cartService.plusQuantity(user, cartId);
+        return WebResponse.<String>builder().data("Berhasil menambah quantity").build();
     }
 
     @DeleteMapping(path = "/api/carts/{cartId}/minus-quantity")
@@ -43,14 +42,14 @@ public class CartController {
     }
 
     @DeleteMapping(path = "/api/carts/{cartId}")
-    public WebResponse<String> deleteCartId(User user, @PathVariable("cartId") Long cartId) {
-        cartService.deleteProductFromCart(user, cartId);
+    public WebResponse<String> deleteCartItem(User user, @PathVariable("cartId") Long cartId) {
+        cartService.deleteCartItemFromCart(user, cartId);
         return WebResponse.<String>builder().data("Berhasil menghapus item dari keranjang").build();
     }
 
     @DeleteMapping(path = "/api/carts")
-    public WebResponse<String> deleteAllProductFromCart(User user){
-        cartService.deleteAllProductFromCart(user);
+    public WebResponse<String> deleteAllCartItem(User user) {
+        cartService.deleteAllCartItems(user);
         return WebResponse.<String>builder().data("Berhasil menghapus semua item dari keranjang").build();
     }
 

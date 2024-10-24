@@ -77,7 +77,7 @@ public class Product {
     @JoinColumn(name = "category_item_id", referencedColumnName = "id")
     private CategoryItem categoryItem;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cart> carts;
+    @OneToMany(mappedBy = "product")
+    private List<CartItem> cartItems;
 
 }
