@@ -5,7 +5,7 @@ import com.skincareMall.skincareMall.model.admin.request.UpdateAdminRequest;
 import com.skincareMall.skincareMall.model.admin.response.AdminResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.repository.AdminRepository;
-import com.skincareMall.skincareMall.service.admin.AdminService;
+import com.skincareMall.skincareMall.service.admin.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,18 +13,16 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.print.attribute.standard.Media;
-
 @RestController
 public class AdminController {
     @Autowired
     private AdminRepository adminRepository;
     @Autowired
-    private AdminService adminService;
+    private AdminServiceImpl adminServiceImpl;
 
     @GetMapping(path = "/api/admins/current-admin", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<AdminResponse> getAdmin(Admin admin) {
-        AdminResponse adminResponse = adminService.getAdmin(admin);
+        AdminResponse adminResponse = adminServiceImpl.getAdmin(admin);
         return WebResponse.<AdminResponse>builder().data(adminResponse).build();
     }
 
@@ -41,7 +39,7 @@ public class AdminController {
         updateAdminRequest.setEmail(email);
         updateAdminRequest.setFullName(fullName);
 
-        AdminResponse adminResponse = adminService.updateAdmin(admin, updateAdminRequest);
+        AdminResponse adminResponse = adminServiceImpl.updateAdmin(admin, updateAdminRequest);
         return WebResponse.<AdminResponse>builder().data(adminResponse).build();
     }
 

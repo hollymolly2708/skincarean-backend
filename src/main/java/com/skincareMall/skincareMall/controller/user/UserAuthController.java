@@ -5,9 +5,8 @@ import com.skincareMall.skincareMall.model.google_auth.request.GoogleLoginTokenR
 import com.skincareMall.skincareMall.model.user.request.LoginUserRequest;
 import com.skincareMall.skincareMall.model.user.request.RegisterUserRequest;
 import com.skincareMall.skincareMall.model.user.response.TokenResponse;
-import com.skincareMall.skincareMall.model.user.response.UserResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
-import com.skincareMall.skincareMall.service.user.UserAuthService;
+import com.skincareMall.skincareMall.service.user.UserAuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserAuthController {
     @Autowired
-    private UserAuthService userAuthService;
+    private UserAuthServiceImpl userAuthServiceImpl;
 
     @Autowired
-    private UserAuthService googleLoginAuthService;
+    private UserAuthServiceImpl googleLoginAuthService;
 
     @PostMapping("/api/users/auth/login/google/verify")
     public WebResponse<TokenResponse> verifyToken(@RequestBody GoogleLoginTokenRequest tokenRequest) {
@@ -43,7 +42,7 @@ public class UserAuthController {
                 .build();
 
 
-        return userAuthService.registerUser(registerUserRequest);
+        return userAuthServiceImpl.registerUser(registerUserRequest);
 
     }
 
@@ -51,13 +50,13 @@ public class UserAuthController {
     public WebResponse<TokenResponse> loginUser(@RequestBody LoginUserRequest loginUserRequest) {
 
         LoginUserRequest.builder().password(loginUserRequest.getPassword()).username(loginUserRequest.getUsername()).build();
-        return userAuthService.login(loginUserRequest);
+        return userAuthServiceImpl.login(loginUserRequest);
 
     }
 
     @DeleteMapping(path = "/api/users/auth/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> logoutUser(User user) {
-        return userAuthService.logoutUser(user);
+        return userAuthServiceImpl.logoutUser(user);
 
     }
 

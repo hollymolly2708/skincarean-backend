@@ -41,6 +41,7 @@ public class ProductMapper {
     }
 
     public static DetailProductResponse toDetailProductResponse(Product product, List<ProductImageResponse> productImageResponse) {
+
         return DetailProductResponse.builder()
                 .productName(product.getName())
                 .productImage(productImageResponse)

@@ -5,7 +5,7 @@ import com.skincareMall.skincareMall.model.admin.request.LoginAdminRequest;
 import com.skincareMall.skincareMall.model.admin.request.RegisterAdminRequest;
 import com.skincareMall.skincareMall.model.user.response.TokenResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
-import com.skincareMall.skincareMall.service.admin.AdminAuthService;
+import com.skincareMall.skincareMall.service.admin.AdminAuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AdminAuthController {
     @Autowired
-    private AdminAuthService adminAuthService;
+    private AdminAuthServiceImpl adminAuthServiceImpl;
 
     @PostMapping(path = "/api/admins/auth/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> register(@RequestParam String fullName,
@@ -38,19 +38,19 @@ public class AdminAuthController {
         registerAdminRequest.setPassword(password);
         registerAdminRequest.setFullName(fullName);
 
-        adminAuthService.registerAdmin(registerAdminRequest);
+        adminAuthServiceImpl.registerAdmin(registerAdminRequest);
         return WebResponse.<String>builder().data("Admin berhasil ditambahkan").build();
     }
 
     @PostMapping(path = "/api/admins/auth/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<TokenResponse> loginAdmin(LoginAdminRequest loginAdminRequest) {
-        TokenResponse tokenResponse = adminAuthService.loginAdmin(loginAdminRequest);
+        TokenResponse tokenResponse = adminAuthServiceImpl.loginAdmin(loginAdminRequest);
         return WebResponse.<TokenResponse>builder().data(tokenResponse).build();
     }
 
     @DeleteMapping(path = "/api/admins/auth/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> logoutAdmin(Admin admin) {
-        adminAuthService.logoutAdmin(admin);
+        adminAuthServiceImpl.logoutAdmin(admin);
         return WebResponse.<String>builder().data("Logout berhasil").build();
     }
 }

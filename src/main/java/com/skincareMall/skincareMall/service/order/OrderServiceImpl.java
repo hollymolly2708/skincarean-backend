@@ -7,25 +7,21 @@ import com.skincareMall.skincareMall.model.order.response.OrderItemResponse;
 import com.skincareMall.skincareMall.model.order.response.OrderResponse;
 import com.skincareMall.skincareMall.model.payment_process.response.PaymentProcessResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
-import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.repository.*;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderService {
+public class OrderServiceImpl {
     @Autowired
     private OrderItemRepository orderItemRepository;
     @Autowired
@@ -484,237 +480,4 @@ public class OrderService {
     }
 
 
-//
-//    @Transactional
-//    public void checkoutFromCart(User user, CartOrderRequest cartOrderRequest) {
-//        validationService.validate(cartOrderRequest);
-//        Cart cart = cartRepository.find(user.getUsernameUser()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Keranjang tidak ditemukan"));
-//
-//        System.out.println(cart.getId());
-//        System.out.println(user.getUsernameUser());
-//        PaymentMethod paymentMethod = paymentMethodRepository.findById(cartOrderRequest.getPaymentMethodId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Metode pembayaran tidak tersedia"));
-//
-//
-//        List<Cart> carts = cartRepository.findByCartId(cart.getId());
-//
-//        System.out.println(cartRepository.findByCartId(1L));
-//
-//        BigDecimal tax = cartOrderRequest.getTax();
-//        BigDecimal shippingCost = cartOrderRequest.getShippingCost();
-
-//        List<Order> orders = cartItems.stream().map(cartItem -> {
-//            Order order = new Order();
-//            order.setId(UUID.randomUUID().toString());
-//            order.setDescription(cartOrderRequest.getDescription());
-//            order.setOrderStatus("Menunggu Pembayaran");
-//            order.setShippingCost(cartOrderRequest.getShippingCost());
-//            order.setShippingAddress(cartOrderRequest.getShippingAddress());
-//            order.setTotalPrice(cartItem
-//                    .getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()).add(shippingCost).add(tax)));
-//            order.setTax(cartOrderRequest.getTax());
-//            order.setUser(user);
-//            order.setCreatedAt(Utilities.changeFormatToTimeStamp());
-//            order.setExpiredAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
-//            order.setProduct(cartItem.getProduct());
-//            order.setOrderStatus("Menunggu pembayaran");
-//            orderRepository.save(order);
-//
-//            if (cartOrderRequest.getPaymentMethodId() != null) {
-//                PaymentProcess paymentProcess = new PaymentProcess();
-//                paymentProcess.setOrder(order);
-//                paymentProcess.setPaymentStatus("Belum dibayar");
-//                paymentProcess.setPaymentCode(Utilities.generatePaymentCode(12));
-//                paymentProcess.setPaymentMethod(paymentMethod);
-//                paymentProcessRepository.save(paymentProcess);
-//            }
-//
-//
-//            return order;
-//        }).toList();
-//
-//
-//        orders.stream().map(
-//                order -> {
-//                    return OrderResponse.builder().orderStatus(order.getOrderStatus())
-//                            .orderId(order.getId())
-//                            .expiredAt(order.getExpiredAt())
-//                            .createdAt(order.getCreatedAt())
-//                            .description(order.getDescription())
-//                            .shippingAddress(order.getShippingAddress())
-//                            .tax(order.getTax())
-//                            .totalPrice(order.getTotalPrice())
-//                            .shippingCost(order.getShippingCost())
-//                            .quantity(order.getQuantity())
-//                            .product(ProductResponse.builder()
-//                                    .productId(order.getProduct().getId())
-//                                    .price(order.getProduct().getPrice())
-//                                    .productDescription(order.getProduct().getDescription())
-//                                    .discount(order.getProduct().getDiscount())
-//                                    .ingredient(order.getProduct().getIngredient())
-//                                    .categoryName(order.getProduct().getCategoryItem().getName())
-//                                    .bpomCode(order.getProduct().getBpomCode())
-//                                    .brandName(order.getProduct().getBrand().getName())
-//                                    .stok(order.getProduct().getStok())
-//                                    .isPopularProduct(order.getProduct().getIsPopularProduct())
-//                                    .size(order.getProduct().getSize())
-//                                    .isPromo(order.getProduct().getIsPromo())
-//                                    .originalPrice(order.getProduct().getOriginalPrice())
-//                                    .thumbnailImage(order.getProduct().getThumbnailImage())
-//                                    .productName(order.getProduct().getName())
-//                                    .build())
-//                            .payment(PaymentProcessResponse.builder()
-//                                    .totalPaid(order.getPaymentProcess().getTotalPaid())
-//                                    .paymentMethodId(order.getPaymentProcess().getId())
-//                                    .paidDate(order.getPaymentProcess().getPaidDate())
-//                                    .paymentCode(order.getPaymentProcess().getPaymentCode())
-//                                    .paymentStatus(order.getPaymentProcess().getPaymentStatus())
-//                                    .build())
-//                            .build();
-//
-//                }
-//        );
-//
-//        cartItems.stream().map(cartItem -> {
-//            Order order = new Order();
-//            order.setId(UUID.randomUUID().toString());
-//            order.setDescription(cartOrderRequest.getDescription());
-//            order.setOrderStatus("Menunggu Pembayaran");
-//            order.setShippingCost(cartOrderRequest.getShippingCost());
-//            order.setShippingAddress(cartOrderRequest.getShippingAddress());
-//            order.setTotalPrice(cartItem
-//                    .getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()).add(shippingCost).add(tax)));
-//            order.setTax(cartOrderRequest.getTax());
-//            order.setUser(user);
-//            order.setCreatedAt(Utilities.changeFormatToTimeStamp());
-//            order.setExpiredAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
-//            order.setProduct(cartItem.getProduct());
-//            order.setOrderStatus("Menunggu pembayaran");
-//            orderRepository.save(order);
-//
-//            if (cartOrderRequest.getPaymentMethodId() != null) {
-//                PaymentProcess paymentProcess = new PaymentProcess();
-//                paymentProcess.setOrder(order);
-//                paymentProcess.setPaymentStatus("Belum dibayar");
-//                paymentProcess.setPaymentCode(Utilities.generatePaymentCode(12));
-//                paymentProcess.setPaymentMethod(paymentMethod);
-//                paymentProcessRepository.save(paymentProcess);
-//            }
-//
-//
-//            return order;
-//        });
-
-
 }
-//
-//    @Transactional(readOnly = true)
-//    public List<OrderResponse> getAllOrders(User user) {
-//        List<Order> orders = orderRepository.findByUserUsernameUser(user.getUsernameUser());
-//
-//        List<OrderResponse> orderResponses = orders.stream().map(order -> {
-//            String productId = order.getProduct().getId();
-//            Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
-//            PaymentProcess paymentProcess = paymentProcessRepository.findByOrderId(order.getId());
-//
-//            ProductResponse productResponse = ProductResponse
-//                    .builder()
-//                    .productId(product.getId())
-//                    .productDescription(product.getDescription())
-//                    .price(product.getPrice())
-//                    .stok(product.getStok())
-//                    .originalPrice(product.getOriginalPrice())
-//                    .isPromo(product.getIsPromo())
-//                    .categoryName(product.getCategoryItem().getName())
-//                    .bpomCode(product.getBpomCode())
-//                    .discount(product.getDiscount())
-//                    .brandName(product.getBrand().getName())
-//                    .thumbnailImage(product.getThumbnailImage())
-//                    .size(product.getSize())
-//                    .productName(product.getName())
-//                    .build();
-//
-//            PaymentProcessResponse paymentProcessResponse = PaymentProcessResponse.builder()
-//                    .paymentMethodId(paymentProcess.getPaymentMethod().getId())
-//                    .paymentStatus(paymentProcess.getPaymentStatus())
-//                    .paidDate(paymentProcess.getPaidDate())
-//                    .paymentCode(paymentProcess.getPaymentCode())
-//                    .totalPaid(paymentProcess.getTotalPaid())
-//                    .build();
-//
-//            return OrderResponse.builder()
-//                    .product(productResponse)
-//                    .orderId(order.getId())
-//                    .productId(product.getId())
-//                    .orderStatus(order.getOrderStatus())
-//                    .totalPrice(order.getTotalPrice())
-//                    .shippingAddress(order.getShippingAddress())
-//                    .description(order.getDescription())
-//                    .tax(order.getTax())
-//                    .expiredAt(order.getExpiredAt())
-//                    .quantity(order.getQuantity())
-//                    .shippingCost(order.getShippingCost())
-//                    .payment(paymentProcessResponse)
-//                    .createdAt(order.getCreatedAt())
-//                    .build();
-//        }).toList();
-//
-//        return orderResponses;
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public OrderResponse detailOrderResponse(User user, String orderId) {
-//        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order tidak ditemukan"));
-//        String productId = order.getProduct().getId();
-//
-//        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
-//
-//        PaymentProcess paymentProcess = paymentProcessRepository.findByOrderId(orderId);
-//
-//        ProductResponse productResponse = ProductResponse.builder()
-//                .productName(product.getId())
-//                .brandName(product.getBrand().getName())
-//                .size(product.getSize())
-//                .stok(product.getStok())
-//                .thumbnailImage(product.getThumbnailImage())
-//                .price(product.getPrice())
-//                .discount(product.getDiscount())
-//                .originalPrice(product.getOriginalPrice())
-//                .bpomCode(product.getBpomCode())
-//                .categoryName(product.getCategoryItem().getName())
-//                .isPromo(product.getIsPromo())
-//                .productId(product.getId())
-//                .productDescription(product.getDescription())
-//                .build();
-//
-//        PaymentProcessResponse paymentProcessResponse = PaymentProcessResponse.builder()
-//
-//                .paymentCode(paymentProcess.getPaymentCode())
-//                .paidDate(paymentProcess.getPaidDate())
-//                .paymentStatus(paymentProcess.getPaymentStatus())
-//                .paymentMethodId(paymentProcess.getPaymentMethod().getId())
-//                .totalPaid(paymentProcess.getTotalPaid())
-//                .build();
-//        OrderResponse orderResponse = OrderResponse.builder()
-//                .orderId(order.getId())
-//                .tax(order.getTax())
-//                .quantity(order.getQuantity())
-//                .orderStatus(order.getOrderStatus())
-//                .description(order.getDescription())
-//                .product(productResponse)
-//                .shippingCost(order.getShippingCost())
-//                .payment(paymentProcessResponse)
-//                .productId(product.getId())
-//                .expiredAt(order.getExpiredAt())
-//                .totalPrice(order.getTotalPrice())
-//                .createdAt(order.getCreatedAt())
-//                .shippingAddress(order.getShippingAddress())
-//                .build();
-//
-//        return orderResponse;
-//
-//
-//    }
-//
-
-//}
-

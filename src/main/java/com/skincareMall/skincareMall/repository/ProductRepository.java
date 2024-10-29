@@ -13,4 +13,5 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String>, JpaSpecificationExecutor<Product> {
     List<Product> findAllByIsPopularProduct(Boolean isPopularProduct);
+    List<Product> findByBrandId(Long brandId);
 }

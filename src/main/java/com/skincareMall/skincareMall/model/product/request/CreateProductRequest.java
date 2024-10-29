@@ -17,7 +17,6 @@ public class CreateProductRequest {
     @Size(max = 100)
     @NotBlank
     private String productName;
-    @Size(max = 100)
     @NotBlank
     private String productDescription;
     @Size(max = 255)
@@ -27,8 +26,7 @@ public class CreateProductRequest {
     @NotNull
     private Long brandId;
     private Boolean isPopularProduct;
-    private Long categoryId;
-    @Size(max = 255)
+    private Long categoryItemId;
     private String ingredient;
     @Size(max = 100)
     @NotBlank
