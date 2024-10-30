@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class CreateProductRequest {
-    @Size(max = 100)
+    @Size(max = 255)
     @NotBlank
     private String productName;
     @NotBlank
