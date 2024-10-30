@@ -25,6 +25,9 @@ public class CartItem {
     private Product product;
     private BigDecimal total;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @Column(name = "quantity")
     private Long quantity;
 

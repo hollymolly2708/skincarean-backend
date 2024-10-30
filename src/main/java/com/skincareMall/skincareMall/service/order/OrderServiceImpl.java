@@ -121,7 +121,7 @@ public class OrderServiceImpl {
         Cart cart = cartRepository.findByUserUsernameUser(user.getUsernameUser())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Keranjang tidak ditemukan"));
 
-        List<CartItem> cartItems = cart.getCartItems();
+        List<CartItem> cartItems = cartItemRepository.findByCartAndIsActive(cart, true);
 
         if (cartItems == null || cartItems.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tidak ada item di dalam keranjang");
@@ -457,6 +457,7 @@ public class OrderServiceImpl {
                             .createdAt(orderItem.getCreatedAt())
                             .quantity(orderItem.getQuantity())
                             .product(ProductResponse.builder()
+                                    .productId(product.getId())
                                     .productName(product.getName())
                                     .size(product.getSize())
                                     .isPromo(product.getIsPromo())

@@ -16,7 +16,7 @@ public class CartController {
 
     @PostMapping(path = "/api/carts", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> addToCart(User user, @RequestBody CreateCartRequest createCartRequest) {
-        cartServiceImpl.addToCartFromDetailProduct(user, createCartRequest);
+        cartServiceImpl.addProductToCart(user, createCartRequest);
         return WebResponse.<String>builder().data("Berhasil menambahkan produk kedalam keranjang").build();
     }
 
@@ -26,22 +26,34 @@ public class CartController {
         return WebResponse.<CartResponse>builder().data(cartResponse).build();
     }
 
-    @PostMapping(path = "/api/carts/{cartId}/plus-quantity")
-    public WebResponse<String> plusQuantity(User user, @PathVariable("cartId") Long cartId) {
-        cartServiceImpl.plusQuantity(user, cartId);
+    @GetMapping(path = "/api/carts/active-carts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<CartResponse> getActiveCart(User user) {
+        CartResponse activeCartItem = cartServiceImpl.getActiveCartItem(user);
+        return WebResponse.<CartResponse>builder().data(activeCartItem).build();
+    }
+
+    @PostMapping(path = "/api/carts/{cartItemId}/plus-quantity")
+    public WebResponse<String> plusQuantity(User user, @PathVariable("cartItemId") Long cartItemId) {
+        cartServiceImpl.plusQuantity(user, cartItemId);
         return WebResponse.<String>builder().data("Berhasil menambah quantity").build();
     }
 
-    @DeleteMapping(path = "/api/carts/{cartId}/minus-quantity")
-    public WebResponse<String> minusQuantity(User user, @PathVariable("cartId") Long cartId) {
-        cartServiceImpl.minusQuantity(user, cartId);
+    @DeleteMapping(path = "/api/carts/{cartItemId}/minus-quantity")
+    public WebResponse<String> minusQuantity(User user, @PathVariable("cartItemId") Long cartItemId) {
+        cartServiceImpl.minusQuantity(user, cartItemId);
         return WebResponse.<String>builder().data("Berhasil mengurangi quantity").build();
     }
 
-    @DeleteMapping(path = "/api/carts/{cartId}")
-    public WebResponse<String> deleteCartItem(User user, @PathVariable("cartId") Long cartId) {
+    @DeleteMapping(path = "/api/carts/{cartItemId}")
+    public WebResponse<String> deleteCartItem(User user, @PathVariable("cartItemId") Long cartId) {
         cartServiceImpl.deleteCartItemFromCart(user, cartId);
         return WebResponse.<String>builder().data("Berhasil menghapus item dari keranjang").build();
+    }
+
+    @PatchMapping(path = "/api/carts/{cartItemId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<String> activeCartItem(User user, @PathVariable("cartItemId") Long cartItemId) {
+        cartServiceImpl.activeCartItem(user, cartItemId);
+        return WebResponse.<String>builder().data("Set").build();
     }
 
     @DeleteMapping(path = "/api/carts")

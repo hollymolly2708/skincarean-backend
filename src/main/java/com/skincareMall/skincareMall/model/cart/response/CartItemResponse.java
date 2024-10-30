@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 public class CartItemResponse {
     private Long id;
     private BigDecimal total;
+    private Boolean isActive;
     private ProductResponse product;
     private Long quantity;
 }
