@@ -1,6 +1,7 @@
 package com.skincareMall.skincareMall.controller.product;
 
 import com.skincareMall.skincareMall.entity.Admin;
+import com.skincareMall.skincareMall.entity.User;
 import com.skincareMall.skincareMall.model.PagingResponse;
 import com.skincareMall.skincareMall.model.product.request.CreateProductRequest;
 import com.skincareMall.skincareMall.model.product.request.SearchProductRequest;
@@ -21,15 +22,7 @@ public class ProductController {
     @Autowired
     private ProductServiceImpl productServiceImpl;
 
-    @PostMapping(
-            path = "/api/products",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<String> createProduct(Admin admin, @RequestBody CreateProductRequest createProductRequest) {
-        productServiceImpl.createProduct(admin, createProductRequest);
-        return WebResponse.<String>builder().data("Produk berhasil ditambahkan").build();
 
-    }
 
     @GetMapping(path = "/api/products")
     public WebResponse<List<ProductResponse>> getAllProducts() {
@@ -49,9 +42,9 @@ public class ProductController {
         return WebResponse.<String>builder().data("Produk berhasil dihapus").build();
     }
 
-    @PatchMapping(path = "/api/products/{productId}",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<DetailProductResponse> updateProductById(@PathVariable("productId") String productId, @RequestBody UpdateProductRequest updateProductRequest, Admin admin) {
-        DetailProductResponse updateDetailProductResponse = productServiceImpl.updateProduct(admin, productId, updateProductRequest);
+    @PatchMapping(path = "/api/products/{productId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<DetailProductResponse> updateProductById(@PathVariable("productId") String productId, @RequestBody UpdateProductRequest updateProductRequest, User user) {
+        DetailProductResponse updateDetailProductResponse = productServiceImpl.updateProduct(user, productId, updateProductRequest);
         return WebResponse.<DetailProductResponse>builder().data(updateDetailProductResponse).build();
     }
 

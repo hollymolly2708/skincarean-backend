@@ -1,5 +1,6 @@
 package com.skincareMall.skincareMall.model.product.response;
 
+import com.skincareMall.skincareMall.entity.Seller;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class ProductResponse {
     private String bpomCode;
     private String size;
     private Long stok;
+    private Seller seller;
     private BigDecimal originalPrice;
     private BigDecimal price;
     private Boolean isPopularProduct;

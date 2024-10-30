@@ -36,6 +36,5 @@ public class Admin {
     private Timestamp createdAt;
     @Column(name = "last_updated_at")
     private Timestamp lastUpdatedAt;
-    @OneToMany(mappedBy = "admin")
-    private List<Product> products;
+
 }

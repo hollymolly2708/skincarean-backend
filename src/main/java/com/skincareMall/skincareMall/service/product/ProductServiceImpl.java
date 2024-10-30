@@ -42,51 +42,7 @@ public class ProductServiceImpl {
     @Autowired
     private ProductImageRepository productImageRepository;
 
-    @Transactional
-    public void createProduct(Admin admin, CreateProductRequest createProductRequest) {
-        validationService.validate(createProductRequest);
 
-        Brand brand = brandRepository.findById(createProductRequest.getBrandId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Brand tidak ditemukan"));
-        CategoryItem categoryItem = categoryItemRepository.findById(createProductRequest.getCategoryItemId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category tidak ditemukan"));
-
-
-        // Membuat dan menyimpan product terlebih dahulu
-        Product product = new Product();
-        BigDecimal requestOriginalPrice = createProductRequest.getOriginalPrice();
-        BigDecimal requestDiscount = createProductRequest.getDiscount();
-        product.setAdmin(admin);
-        product.setId(UUID.randomUUID().toString());
-        product.setThumbnailImage(createProductRequest.getThumbnailImage());
-        product.setName(createProductRequest.getProductName());
-        product.setDescription(createProductRequest.getProductDescription());
-        product.setIsPromo(createProductRequest.getIsPromo());
-        product.setBpomCode(createProductRequest.getBpomCode());
-        product.setIngredient(createProductRequest.getIngredient());
-        product.setSize(createProductRequest.getSize());
-        product.setStok(createProductRequest.getStok());
-        product.setIsPopularProduct(createProductRequest.getIsPopularProduct());
-        product.setBrand(brand);
-        product.setPrice(requestOriginalPrice.subtract(requestOriginalPrice.multiply(requestDiscount.divide(BigDecimal.valueOf(100)))));
-        product.setCategoryItem(categoryItem);
-        product.setOriginalPrice(createProductRequest.getOriginalPrice());
-        product.setDiscount(createProductRequest.getDiscount());
-        product.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
-        product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
-
-        // Simpan product dan ambil kembali untuk memastikan ID sudah di-set
-        productRepository.save(product);
-
-        if (createProductRequest.getProductImages() != null) {
-            // Membuat dan menyimpan ProductCategory yang terkait
-            for (CreateProductImageRequest createProductImageRequest : createProductRequest.getProductImages()) {
-                ProductImage productImage = new ProductImage();
-                productImage.setImageUrl(createProductImageRequest.getImageUrl());
-                productImage.setProduct(product);
-                productImageRepository.save(productImage);
-            }
-        }
-
-    }
 
 
     @Transactional(readOnly = true)
@@ -124,7 +80,7 @@ public class ProductServiceImpl {
 
 
     @Transactional
-    public DetailProductResponse updateProduct(Admin admin, String productId, UpdateProductRequest productRequest) {
+    public DetailProductResponse updateProduct(User user, String productId, UpdateProductRequest productRequest) {
         validationService.validate(productRequest);
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
 
@@ -149,7 +105,7 @@ public class ProductServiceImpl {
             }
 
         }
-        if(Objects.nonNull(productRequest.getSize())){
+        if (Objects.nonNull(productRequest.getSize())) {
             product.setSize(productRequest.getSize());
         }
 

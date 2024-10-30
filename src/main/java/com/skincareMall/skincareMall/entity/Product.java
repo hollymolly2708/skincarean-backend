@@ -57,8 +57,8 @@ public class Product {
     private Timestamp lastUpdatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "added_by_admin", referencedColumnName = "username")
-    private Admin admin;
+    @JoinColumn(name = "seller_id", referencedColumnName = "seller_id")
+    private Seller seller;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;

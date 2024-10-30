@@ -31,6 +31,7 @@ public class ProductMapper {
                 .originalPrice(product.getOriginalPrice())
                 .price(product.getPrice())
                 .isPopularProduct(product.getIsPopularProduct())
+                .seller(product.getSeller())
                 .stok(product.getStok())
                 .brandName(product.getBrand().getName())
                 .categoryName(product.getCategoryItem().getName())

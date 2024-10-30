@@ -42,4 +42,11 @@ public class User {
     private List<ProductReview> productReviews;
     @OneToOne(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private Cart cart;
+
+    @Column(name = "is_seller")
+    private Boolean isSeller;
+
+
+    @OneToOne(mappedBy = "user")
+    private Seller seller;
 }

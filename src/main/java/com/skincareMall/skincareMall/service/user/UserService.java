@@ -7,6 +7,5 @@ import com.skincareMall.skincareMall.model.user.response.WebResponse;
 
 public interface UserService {
     WebResponse<UserResponse> getUser(User user);
-
     WebResponse<UserResponse> updateUser(User user, UpdateUserRequest request);
 }
