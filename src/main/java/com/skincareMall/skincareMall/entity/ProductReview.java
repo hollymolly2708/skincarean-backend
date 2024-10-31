@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "review_products")
+@Table(name = "product_reviews")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

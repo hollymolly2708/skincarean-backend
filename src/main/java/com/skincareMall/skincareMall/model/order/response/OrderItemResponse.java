@@ -16,12 +16,12 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItemResponse {
-    private ProductResponse product;
+    private OrderProductResponse product;
 
     private BigDecimal price;
     private Timestamp createdAt;
     private Timestamp expiredAt;
-
+    private OrderProductVariantResponse productVariant;
     private Long quantity;
 
 }

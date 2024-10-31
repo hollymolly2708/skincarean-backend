@@ -38,4 +38,9 @@ public class OrderItem {
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
+    @ManyToOne
+    @JoinColumn(name = "product_variant_id", referencedColumnName = "id")
+    private ProductVariant productVariant;
+
+
 }

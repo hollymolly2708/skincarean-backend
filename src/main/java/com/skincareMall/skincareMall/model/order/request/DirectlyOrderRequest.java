@@ -27,6 +27,9 @@ public class DirectlyOrderRequest {
     @Size(max = 255)
     private String description;
     @NotNull
+    @NotBlank
     private String productId;
+    @NotNull
+    private Long productVariantId;
 
 }
