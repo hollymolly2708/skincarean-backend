@@ -34,20 +34,13 @@ public class Product {
     @Column(name = "is_promo")
     private Boolean isPromo;
 
-    private String size;
-
-    private Long stok;
-
-    private BigDecimal price;
-
-    private BigDecimal discount;
+    @Column(name = "total_stok")
+    private Long totalStok;
 
     @Column(name = "is_popular_product")
     private Boolean isPopularProduct;
 
 
-    @Column(name = "original_price")
-    private BigDecimal originalPrice;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -79,5 +72,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<CartItem> cartItems;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductVariant> productVariants;
 
 }

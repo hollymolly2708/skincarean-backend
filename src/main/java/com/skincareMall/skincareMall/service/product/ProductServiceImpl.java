@@ -3,14 +3,13 @@ package com.skincareMall.skincareMall.service.product;
 import com.skincareMall.skincareMall.entity.*;
 import com.skincareMall.skincareMall.mapper.ProductMapper;
 import com.skincareMall.skincareMall.model.product.request.*;
-import com.skincareMall.skincareMall.model.product.response.*;
-import com.skincareMall.skincareMall.repository.BrandRepository;
-import com.skincareMall.skincareMall.repository.CategoryItemRepository;
-import com.skincareMall.skincareMall.repository.ProductImageRepository;
-import com.skincareMall.skincareMall.repository.ProductRepository;
+import com.skincareMall.skincareMall.model.product.response.DetailProductResponse;
+import com.skincareMall.skincareMall.model.product.response.ProductImageResponse;
+import com.skincareMall.skincareMall.model.product.response.ProductResponse;
+import com.skincareMall.skincareMall.model.product.response.ProductVariantResponse;
+import com.skincareMall.skincareMall.repository.*;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
-
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static com.skincareMall.skincareMall.mapper.ProductMapper.*;
+import static com.skincareMall.skincareMall.mapper.ProductMapper.toDetailProductResponse;
 
 @Service
 public class ProductServiceImpl {
@@ -42,6 +45,9 @@ public class ProductServiceImpl {
     @Autowired
     private ProductImageRepository productImageRepository;
 
+    @Autowired
+    private ProductVariantRepository productVariantRepository;
+
     @Transactional
     public void createProduct(Admin admin, CreateProductRequest createProductRequest) {
         validationService.validate(createProductRequest);
@@ -52,8 +58,6 @@ public class ProductServiceImpl {
 
         // Membuat dan menyimpan product terlebih dahulu
         Product product = new Product();
-        BigDecimal requestOriginalPrice = createProductRequest.getOriginalPrice();
-        BigDecimal requestDiscount = createProductRequest.getDiscount();
         product.setAdmin(admin);
         product.setId(UUID.randomUUID().toString());
         product.setThumbnailImage(createProductRequest.getThumbnailImage());
@@ -62,14 +66,9 @@ public class ProductServiceImpl {
         product.setIsPromo(createProductRequest.getIsPromo());
         product.setBpomCode(createProductRequest.getBpomCode());
         product.setIngredient(createProductRequest.getIngredient());
-        product.setSize(createProductRequest.getSize());
-        product.setStok(createProductRequest.getStok());
         product.setIsPopularProduct(createProductRequest.getIsPopularProduct());
         product.setBrand(brand);
-        product.setPrice(requestOriginalPrice.subtract(requestOriginalPrice.multiply(requestDiscount.divide(BigDecimal.valueOf(100)))));
         product.setCategoryItem(categoryItem);
-        product.setOriginalPrice(createProductRequest.getOriginalPrice());
-        product.setDiscount(createProductRequest.getDiscount());
         product.setCreatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
         product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp(System.currentTimeMillis()));
 
@@ -86,35 +85,56 @@ public class ProductServiceImpl {
             }
         }
 
+        if (createProductRequest.getCreateProductVariantRequests() != null) {
+            for (CreateProductVariantRequest createProductVariantRequest : createProductRequest.getCreateProductVariantRequests()) {
+                ProductVariant productVariant = new ProductVariant();
+                productVariant.setProduct(product);
+                productVariant.setCreatedAt(Utilities.changeFormatToTimeStamp());
+                productVariant.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
+                productVariant.setSize(createProductVariantRequest.getSize());
+                productVariant.setStok(createProductVariantRequest.getStok());
+                productVariant.setDiscount(createProductVariantRequest.getDiscount());
+                productVariant.setOriginalPrice(createProductVariantRequest.getOriginalPrice());
+                productVariant.setDiscount(createProductVariantRequest.getDiscount());
+                productVariant.setPrice(createProductVariantRequest.getOriginalPrice().subtract(createProductVariantRequest.getOriginalPrice().multiply(createProductVariantRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
+                productVariantRepository.save(productVariant);
+            }
+        }
+
+        List<ProductVariant> productVariants = productVariantRepository.findAllByProductId(product.getId());
+
+        AtomicReference<Long> overalTotalStok = new AtomicReference<>(0L);
+        for (ProductVariant productVariant : productVariants) {
+            overalTotalStok.updateAndGet(total -> productVariant.getStok());
+        }
+        product.setTotalStok(overalTotalStok.get());
+        productRepository.save(product);
+
     }
 
 
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(product -> toProductResponse(product)).toList();
+        return products.stream().map(ProductMapper::toProductResponse).toList();
     }
 
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllPopularProducts() {
-        List<ProductResponse> popularProducts = productRepository.findAllByIsPopularProduct(true).stream().map(
-                products ->
-                        ProductMapper.toProductResponse(products)
-        ).toList();
 
-        return popularProducts;
+        return productRepository.findAllByIsPopularProduct(true).stream().map(ProductMapper::toProductResponse).toList();
     }
 
 
     @Transactional(readOnly = true)
     public DetailProductResponse getDetailProduct(String productId) {
-        List<ProductImageResponse> productImageResponses = productImageRepository.findAllByProductId(productId)
-                .stream()
-                .map(productImage -> toProductImageResponse(productImage))
-                .toList();
+        List<ProductImageResponse> productImageResponses = productImageRepository.findAllByProductId(productId).stream().map(ProductMapper::toProductImageResponse).toList();
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
+        List<ProductVariant> productVariants = productVariantRepository.findAllByProductId(productId);
 
-        return toDetailProductResponse(product, productImageResponses);
+        List<ProductVariantResponse> productVariantResponses = ProductMapper.productVariantsToProductVariantResponses(productVariants);
+
+        return toDetailProductResponse(product, productImageResponses, productVariantResponses);
     }
 
     @Transactional
@@ -138,25 +158,6 @@ public class ProductServiceImpl {
             product.setDescription(productRequest.getProductDescription());
             System.out.println(productRequest.getProductDescription());
         }
-        if (Objects.nonNull(productRequest.getDiscount())) {
-            if (Objects.nonNull(productRequest.getOriginalPrice())) {
-                product.setDiscount(productRequest.getDiscount());
-                product.setPrice(productRequest.getOriginalPrice().subtract(productRequest.getOriginalPrice().multiply(productRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
-                System.out.println(productRequest.getDiscount());
-            } else {
-                product.setDiscount(productRequest.getDiscount());
-                product.setPrice(product.getOriginalPrice().subtract(product.getOriginalPrice().multiply(productRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
-            }
-
-        }
-        if(Objects.nonNull(productRequest.getSize())){
-            product.setSize(productRequest.getSize());
-        }
-
-        if (Objects.nonNull(productRequest.getOriginalPrice())) {
-            product.setOriginalPrice(productRequest.getOriginalPrice());
-            product.setPrice(productRequest.getOriginalPrice());
-        }
 
         if (Objects.nonNull(productRequest.getBrandId())) {
             Brand brand = brandRepository.findById(productRequest.getBrandId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Brand tidak ditemukan"));
@@ -179,6 +180,25 @@ public class ProductServiceImpl {
             System.out.println(productRequest.getProductImages());
         }
 
+        if (Objects.nonNull(productRequest.getProductVariants())) {
+            for (UpdateProductVariantRequest updateProductVariantRequest : productRequest.getProductVariants()) {
+                ProductVariant productVariant = productVariantRepository.findByIdAndProductId(updateProductVariantRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Varian dari produk tidak ditemukan"));
+                if (productVariant != null) {
+                    productVariant.setOriginalPrice(updateProductVariantRequest.getOriginalPrice());
+                    productVariant.setSize(updateProductVariantRequest.getSize());
+                    productVariant.setStok(updateProductVariantRequest.getStok());
+                    productVariant.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
+                    productVariant.setDiscount(updateProductVariantRequest.getDiscount());
+                    productVariant.setPrice(updateProductVariantRequest.getOriginalPrice().subtract(updateProductVariantRequest.getOriginalPrice().multiply(updateProductVariantRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
+
+                    productVariantRepository.save(productVariant);
+
+
+                }
+
+            }
+        }
+
         if (Objects.nonNull(productRequest.getCategoryItemId())) {
             CategoryItem categoryItem = categoryItemRepository.findById(productRequest.getCategoryItemId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category tidak ditemukan"));
             product.setCategoryItem(categoryItem);
@@ -188,10 +208,6 @@ public class ProductServiceImpl {
             System.out.println(productRequest.getIsPromo());
         }
 
-        if (Objects.nonNull(productRequest.getStok())) {
-            product.setStok(productRequest.getStok());
-            System.out.println(productRequest.getStok());
-        }
 
         if (Objects.nonNull(productRequest.getIngredient())) {
             product.setIngredient(productRequest.getIngredient());
@@ -202,9 +218,20 @@ public class ProductServiceImpl {
         }
         product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
 
+        AtomicReference<Long> overalTotalStok = new AtomicReference<>(0L);
+
+        List<ProductVariant> productVariants = productVariantRepository.findAllByProductId(productId);
+
+        productVariants.forEach(productVariant -> {
+            overalTotalStok.updateAndGet(total -> productVariant.getStok());
+        });
+        product.setTotalStok(overalTotalStok.get());
+        product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
         productRepository.save(product);
-        List<ProductImageResponse> productImageResponse = product.getProductImages().stream().map(productImage -> toProductImageResponse(productImage)).toList();
-        return toDetailProductResponse(product, productImageResponse);
+
+        List<ProductImageResponse> productImageResponse = product.getProductImages().stream().map(ProductMapper::toProductImageResponse).toList();
+        List<ProductVariantResponse> productVariantResponses = ProductMapper.productVariantsToProductVariantResponses(productVariants);
+        return toDetailProductResponse(product, productImageResponse, productVariantResponses);
     }
 
     @Transactional(readOnly = true)

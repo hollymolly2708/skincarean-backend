@@ -29,5 +29,8 @@ public class DetailProductResponse {
     private Boolean isPopularProduct;
     private String ingredient;
     private String categoryName;
-    private List<ProductImageResponse> productImage;
+    private BigDecimal minPrice;
+    private BigDecimal maxPrice;
+    private List<ProductImageResponse> productImages;
+    private List<ProductVariantResponse> productVariants;
 }

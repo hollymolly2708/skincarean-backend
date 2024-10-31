@@ -1,17 +1,14 @@
 package com.skincareMall.skincareMall.service.cart;
 
-import com.skincareMall.skincareMall.entity.Cart;
-import com.skincareMall.skincareMall.entity.CartItem;
-import com.skincareMall.skincareMall.entity.Product;
-import com.skincareMall.skincareMall.entity.User;
+import com.skincareMall.skincareMall.entity.*;
 import com.skincareMall.skincareMall.model.cart.request.CreateCartRequest;
 import com.skincareMall.skincareMall.model.cart.response.CartItemResponse;
+import com.skincareMall.skincareMall.model.cart.response.CartProductResponse;
+import com.skincareMall.skincareMall.model.cart.response.CartProductVariantResponse;
 import com.skincareMall.skincareMall.model.cart.response.CartResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
-import com.skincareMall.skincareMall.repository.CartItemRepository;
-import com.skincareMall.skincareMall.repository.CartRepository;
-import com.skincareMall.skincareMall.repository.ProductRepository;
-import com.skincareMall.skincareMall.repository.UserRepository;
+import com.skincareMall.skincareMall.model.product.response.ProductVariantResponse;
+import com.skincareMall.skincareMall.repository.*;
 import com.skincareMall.skincareMall.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpOutputMessage;
@@ -41,15 +38,22 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private ProductVariantRepository productVariantRepository;
+
     @Override
     @Transactional
     public void addProductToCart(User user, CreateCartRequest request) {
+        validationService.validate(request);
         Cart cart = cartRepository.findByUserUsernameUser(user.getUsernameUser()).orElse(null);
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Tidak ditemukan"));
         CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product).orElse(null);
 
-        BigDecimal productTotal = product.getPrice().multiply(BigDecimal.valueOf(request.getQuantity()));
+        ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Varian produk tidak ditemukan"));
+
+
+        BigDecimal productTotal = productVariant.getPrice().multiply(BigDecimal.valueOf(request.getQuantity()));
 
         if (cart == null) {
             Cart newCart = new Cart();
@@ -62,6 +66,7 @@ public class CartServiceImpl implements CartService {
             newCartItem.setProduct(product);
             newCartItem.setQuantity(request.getQuantity());
             newCartItem.setTotal(productTotal);
+            newCartItem.setProductVariant(productVariant);
             newCartItem.setCart(newCart);
             newCartItem.setIsActive(false);
             cartItemRepository.save(newCartItem);
@@ -72,6 +77,7 @@ public class CartServiceImpl implements CartService {
                 newCartItem.setCart(cart);
                 newCartItem.setProduct(product);
                 newCartItem.setIsActive(false);
+                newCartItem.setProductVariant(productVariant);
                 newCartItem.setQuantity(request.getQuantity());
                 newCartItem.setTotal(productTotal);
                 cartItemRepository.save(newCartItem);
@@ -102,28 +108,25 @@ public class CartServiceImpl implements CartService {
 
         List<CartItemResponse> cartItemResponses = cartItems.stream().map(cartItem -> {
             totalPrice.updateAndGet(currentTotal -> currentTotal.add(cartItem.getTotal()));
-            BigDecimal itemSubTotal = cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+            BigDecimal itemSubTotal = cartItem.getProductVariant().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
             return CartItemResponse.builder()
                     .id(cartItem.getId())
-                    .product(ProductResponse.builder()
-                            .size(cartItem.getProduct().getSize())
-                            .stok(cartItem.getProduct().getStok())
-                            .isPromo(cartItem.getProduct().getIsPromo())
+                    .product(CartProductResponse.builder()
                             .productName(cartItem.getProduct().getName())
                             .thumbnailImage(cartItem.getProduct().getThumbnailImage())
-                            .originalPrice(cartItem.getProduct().getOriginalPrice())
-                            .price(cartItem.getProduct().getPrice())
-                            .isPopularProduct(cartItem.getProduct().getIsPopularProduct())
                             .brandName(cartItem.getProduct().getBrand().getName())
                             .productId(cartItem.getProduct().getId())
-                            .bpomCode(cartItem.getProduct().getBpomCode())
-                            .discount(cartItem.getProduct().getDiscount())
                             .categoryName(cartItem.getProduct().getCategoryItem().getName())
-                            .ingredient(cartItem.getProduct().getIngredient())
-                            .productDescription(cartItem.getProduct().getDescription())
                             .build())
                     .total(itemSubTotal)
                     .isActive(cartItem.getIsActive())
+                    .productVariant(CartProductVariantResponse.builder()
+                            .price(cartItem.getProductVariant().getPrice())
+                            .size(cartItem.getProductVariant().getSize())
+                            .discount(cartItem.getProductVariant().getDiscount())
+                            .originalPrice(cartItem.getProductVariant().getOriginalPrice())
+                            .id(cartItem.getProductVariant().getId())
+                            .build())
                     .quantity(cartItem.getQuantity())
                     .build();
         }).collect(Collectors.toList());
@@ -153,31 +156,28 @@ public class CartServiceImpl implements CartService {
         List<CartItemResponse> cartItemResponses = cart.getCartItems().stream().map(cartItem -> {
 
 
-            BigDecimal itemSubTotal = cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+            BigDecimal itemSubTotal = cartItem.getProductVariant().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
 
             return CartItemResponse.builder()
                     .id(cartItem.getId())
-                    .product(ProductResponse.builder()
-                            .size(cartItem.getProduct().getSize())
-                            .stok(cartItem.getProduct().getStok())
-                            .isPromo(cartItem.getProduct().getIsPromo())
+                    .product(CartProductResponse.builder()
                             .productName(cartItem.getProduct().getName())
                             .thumbnailImage(cartItem.getProduct().getThumbnailImage())
-                            .originalPrice(cartItem.getProduct().getOriginalPrice())
-                            .price(cartItem.getProduct().getPrice())
-                            .isPopularProduct(cartItem.getProduct().getIsPopularProduct())
                             .brandName(cartItem.getProduct().getBrand().getName())
                             .productId(cartItem.getProduct().getId())
-                            .bpomCode(cartItem.getProduct().getBpomCode())
-                            .discount(cartItem.getProduct().getDiscount())
                             .categoryName(cartItem.getProduct().getCategoryItem().getName())
-                            .ingredient(cartItem.getProduct().getIngredient())
-                            .productDescription(cartItem.getProduct().getDescription())
                             .build())
                     .total(itemSubTotal)
                     .isActive(cartItem.getIsActive())
                     .quantity(cartItem.getQuantity())
+                    .productVariant(CartProductVariantResponse.builder()
+                            .size(cartItem.getProductVariant().getSize())
+                            .price(cartItem.getProductVariant().getPrice())
+                            .originalPrice(cartItem.getProductVariant().getOriginalPrice())
+                            .discount(cartItem.getProductVariant().getDiscount())
+                            .id(cartItem.getProductVariant().getId())
+                            .build())
                     .build();
         }).collect(Collectors.toList());
 
@@ -207,14 +207,14 @@ public class CartServiceImpl implements CartService {
 
         // Increase quantity and update total
         cartItem.setQuantity(cartItem.getQuantity() + 1);
-        BigDecimal newSubTotal = cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+        BigDecimal newSubTotal = cartItem.getProductVariant().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
         cartItem.setTotal(newSubTotal);
         cartItemRepository.save(cartItem);
 
         // Update cart total price and quantity
         Cart cart = cartItem.getCart();
         cart.setQuantity(cart.getQuantity() + 1);
-        cart.setTotalPrice(cart.getTotalPrice().add(cartItem.getProduct().getPrice()));
+        cart.setTotalPrice(cart.getTotalPrice().add(cartItem.getProductVariant().getPrice()));
         cartRepository.save(cart);
     }
 
@@ -229,20 +229,20 @@ public class CartServiceImpl implements CartService {
             // Remove item if quantity is 1 or less
             Cart cart = cartItem.getCart();
             cart.setQuantity(cart.getQuantity() - 1);
-            cart.setTotalPrice(cart.getTotalPrice().subtract(cartItem.getProduct().getPrice()));
+            cart.setTotalPrice(cart.getTotalPrice().subtract(cartItem.getProductVariant().getPrice()));
             cartRepository.save(cart);
             cartItemRepository.delete(cartItem);
         } else {
             // Decrease quantity and update total
             cartItem.setQuantity(cartItem.getQuantity() - 1);
-            BigDecimal newSubTotal = cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+            BigDecimal newSubTotal = cartItem.getProductVariant().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
             cartItem.setTotal(newSubTotal);
             cartItemRepository.save(cartItem);
 
             // Update cart total price and quantity
             Cart cart = cartItem.getCart();
             cart.setQuantity(cart.getQuantity() - 1);
-            cart.setTotalPrice(cart.getTotalPrice().subtract(cartItem.getProduct().getPrice()));
+            cart.setTotalPrice(cart.getTotalPrice().subtract(cartItem.getProductVariant().getPrice()));
             cartRepository.save(cart);
         }
     }
