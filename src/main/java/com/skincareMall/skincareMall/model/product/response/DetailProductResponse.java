@@ -20,11 +20,7 @@ public class DetailProductResponse {
     private Boolean isPromo;
     private String thumbnailImage;
     private String bpomCode;
-    private String size;
-    private Long stok;
-    private BigDecimal originalPrice;
-    private BigDecimal price;
-    private BigDecimal discount;
+    private Long totalStok;
     private String brandName;
     private Boolean isPopularProduct;
     private String ingredient;

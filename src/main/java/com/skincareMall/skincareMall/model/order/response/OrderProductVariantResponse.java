@@ -13,9 +13,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class OrderProductVariantResponse {
+    private Long id;
     private String size;
     private BigDecimal price;
     private BigDecimal originalPrice;
     private BigDecimal discount;
-    private Long id;
+
 }

@@ -19,7 +19,6 @@ import java.util.List;
 @Data
 public class OrderResponse {
     private String orderId;
-
     private String orderStatus;
     private BigDecimal finalPrice;
     private String description;

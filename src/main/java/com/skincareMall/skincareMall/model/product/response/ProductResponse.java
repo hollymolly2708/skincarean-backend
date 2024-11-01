@@ -17,13 +17,9 @@ import java.util.List;
 public class ProductResponse {
     private String productId;
     private String productName;
-    private String productDescription;
     private Boolean isPromo;
     private String thumbnailImage;
-    private String bpomCode;
-    private Long stok;
     private Boolean isPopularProduct;
-    private String ingredient;
     private String brandName;
     private String categoryName;
     private BigDecimal minPrice;

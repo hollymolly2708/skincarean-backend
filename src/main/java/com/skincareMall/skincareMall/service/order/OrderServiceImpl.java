@@ -229,6 +229,7 @@ public class OrderServiceImpl {
                                                     OrderItemResponse
                                                             .builder()
                                                             .createdAt(orderItem.getCreatedAt())
+                                                            .id(orderItem.getId())
                                                             .product(OrderProductResponse.builder()
                                                                     .productId(orderItem.getProduct().getId())
                                                                     .brandName(orderItem.getProduct().getName())
@@ -448,6 +449,7 @@ public class OrderServiceImpl {
 
                     Product product = orderItem.getProduct();
                     return OrderItemResponse.builder()
+                            .id(orderItem.getId())
                             .price(orderItem.getTotalPrice())
                             .expiredAt(orderItem.getExpiredAt())
                             .createdAt(orderItem.getCreatedAt())

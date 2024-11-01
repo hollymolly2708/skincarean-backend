@@ -29,12 +29,8 @@ public class ProductMapper {
         return ProductResponse.builder()
                 .productId(product.getId())
                 .productName(product.getName())
-                .productDescription(product.getDescription())
                 .isPromo(product.getIsPromo())
-                .ingredient(product.getIngredient())
-                .bpomCode(product.getBpomCode())
                 .isPopularProduct(product.getIsPopularProduct())
-                .stok(product.getTotalStok())
                 .maxPrice(product.getProductVariants().stream()
                         .map(ProductVariant::getPrice) // Mengambil harga sebagai BigDecimal// Mengonversi BigDecimal ke double
                         .max(BigDecimal::compareTo) // Mendapatkan nilai maksimum
@@ -66,7 +62,7 @@ public class ProductMapper {
                 .minPrice(product.getProductVariants().stream().map(ProductVariant::getPrice).min(BigDecimal::compareTo).orElse(BigDecimal.ZERO))
                 .maxPrice(product.getProductVariants().stream().map(ProductVariant::getPrice).max(BigDecimal::compareTo).orElse(BigDecimal.ZERO))
                 .productVariants(productVariantResponses)
-                .stok(product.getTotalStok())
+                .totalStok(product.getTotalStok())
                 .build();
     }
 

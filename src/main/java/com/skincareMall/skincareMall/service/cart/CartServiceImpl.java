@@ -50,7 +50,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Tidak ditemukan"));
         CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product).orElse(null);
 
-        ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Varian produk tidak ditemukan"));
+        ProductVariant productVariant = productVariantRepository.findByIdAndProductId(request.getProductVariantId(), request.getProductId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Varian produk tidak ditemukan"));
 
 
         BigDecimal productTotal = productVariant.getPrice().multiply(BigDecimal.valueOf(request.getQuantity()));
