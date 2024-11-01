@@ -18,7 +18,7 @@ public class CartItemResponse {
     private Long id;
     private BigDecimal total;
     private Boolean isActive;
-    private CartProductResponse product;
     private Long quantity;
+    private CartProductResponse product;
     private CartProductVariantResponse productVariant;
 }

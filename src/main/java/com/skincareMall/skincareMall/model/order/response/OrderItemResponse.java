@@ -16,11 +16,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItemResponse {
-    private String id;
     private BigDecimal price;
     private Long quantity;
-    private Timestamp createdAt;
-    private Timestamp expiredAt;
     private OrderProductResponse product;
     private OrderProductVariantResponse productVariant;
 

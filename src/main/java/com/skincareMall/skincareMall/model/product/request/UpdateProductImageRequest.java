@@ -16,5 +16,5 @@ public class UpdateProductImageRequest {
     @NotBlank
     private String imageUrl;
     private Long id;
-    private String productId;
+    private String productVariantId;
 }

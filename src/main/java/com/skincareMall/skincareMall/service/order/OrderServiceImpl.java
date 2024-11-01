@@ -228,8 +228,6 @@ public class OrderServiceImpl {
                                             orderItem ->
                                                     OrderItemResponse
                                                             .builder()
-                                                            .createdAt(orderItem.getCreatedAt())
-                                                            .id(orderItem.getId())
                                                             .product(OrderProductResponse.builder()
                                                                     .productId(orderItem.getProduct().getId())
                                                                     .brandName(orderItem.getProduct().getName())
@@ -237,7 +235,6 @@ public class OrderServiceImpl {
                                                                     .categoryName(orderItem.getProduct().getCategoryItem().getName())
                                                                     .thumbnailImage(orderItem.getProduct().getThumbnailImage())
                                                                     .build())
-                                                            .expiredAt(orderItem.getExpiredAt())
                                                             .price(orderItem.getTotalPrice())
                                                             .productVariant(OrderProductVariantResponse.builder()
                                                                     .id(orderItem.getProductVariant().getId())
@@ -279,7 +276,6 @@ public class OrderServiceImpl {
                                         orderItem ->
                                                 OrderItemResponse
                                                         .builder()
-                                                        .createdAt(orderItem.getCreatedAt())
                                                         .product(OrderProductResponse.builder()
                                                                 .productId(orderItem.getProduct().getId())
                                                                 .brandName(orderItem.getProduct().getName())
@@ -287,7 +283,6 @@ public class OrderServiceImpl {
                                                                 .categoryName(orderItem.getProduct().getCategoryItem().getName())
                                                                 .thumbnailImage(orderItem.getProduct().getThumbnailImage())
                                                                 .build())
-                                                        .expiredAt(orderItem.getExpiredAt())
                                                         .price(orderItem.getTotalPrice())
                                                         .productVariant(OrderProductVariantResponse.builder()
                                                                 .size(orderItem.getProductVariant().getSize())
@@ -342,7 +337,6 @@ public class OrderServiceImpl {
                                         orderItem ->
                                                 OrderItemResponse
                                                         .builder()
-                                                        .createdAt(orderItem.getCreatedAt())
                                                         .product(OrderProductResponse.builder()
                                                                 .productId(orderItem.getProduct().getId())
                                                                 .brandName(orderItem.getProduct().getName())
@@ -350,7 +344,6 @@ public class OrderServiceImpl {
                                                                 .categoryName(orderItem.getProduct().getCategoryItem().getName())
                                                                 .thumbnailImage(orderItem.getProduct().getThumbnailImage())
                                                                 .build())
-                                                        .expiredAt(orderItem.getExpiredAt())
                                                         .price(orderItem.getTotalPrice())
                                                         .productVariant(OrderProductVariantResponse.builder()
                                                                 .size(orderItem.getProductVariant().getSize())
@@ -390,7 +383,6 @@ public class OrderServiceImpl {
                                         orderItem ->
                                                 OrderItemResponse
                                                         .builder()
-                                                        .createdAt(orderItem.getCreatedAt())
                                                         .product(OrderProductResponse.builder()
                                                                 .productId(orderItem.getProduct().getId())
                                                                 .brandName(orderItem.getProduct().getName())
@@ -398,7 +390,6 @@ public class OrderServiceImpl {
                                                                 .categoryName(orderItem.getProduct().getCategoryItem().getName())
                                                                 .thumbnailImage(orderItem.getProduct().getThumbnailImage())
                                                                 .build())
-                                                        .expiredAt(orderItem.getExpiredAt())
                                                         .price(orderItem.getTotalPrice())
                                                         .productVariant(OrderProductVariantResponse.builder()
                                                                 .size(orderItem.getProductVariant().getSize())
@@ -449,10 +440,7 @@ public class OrderServiceImpl {
 
                     Product product = orderItem.getProduct();
                     return OrderItemResponse.builder()
-                            .id(orderItem.getId())
                             .price(orderItem.getTotalPrice())
-                            .expiredAt(orderItem.getExpiredAt())
-                            .createdAt(orderItem.getCreatedAt())
                             .productVariant(OrderProductVariantResponse.builder()
                                     .size(orderItem.getProductVariant().getSize())
                                     .price(orderItem.getProductVariant().getPrice())

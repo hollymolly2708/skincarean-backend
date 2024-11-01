@@ -45,11 +45,10 @@ public class ProductMapper {
                 .build();
     }
 
-    public static DetailProductResponse toDetailProductResponse(Product product, List<ProductImageResponse> productImageResponses, List<ProductVariantResponse> productVariantResponses) {
+    public static DetailProductResponse toDetailProductResponse(Product product, List<ProductVariantResponse> productVariantResponses) {
 
         return DetailProductResponse.builder()
                 .productName(product.getName())
-                .productImages(productImageResponses)
                 .productId(product.getId())
                 .ingredient(product.getIngredient())
                 .isPopularProduct(product.getIsPopularProduct())
@@ -67,17 +66,23 @@ public class ProductMapper {
     }
 
     public static List<ProductVariantResponse> productVariantsToProductVariantResponses(List<ProductVariant> productVariants) {
-        List<ProductVariantResponse> productVariantResponses = productVariants.stream().map(productVariant -> {
+        return productVariants.stream().map(productVariant -> {
+            List<ProductImageResponse> productImageResponses = productVariant.getProductImages().stream().map(productImage ->
+                    ProductImageResponse.builder()
+                            .id(productImage.getId())
+                            .imageUrl(productImage.getImageUrl())
+                            .build()
+            ).toList();
             return ProductVariantResponse.builder()
                     .id(productVariant.getId())
                     .stok(productVariant.getStok())
                     .size(productVariant.getSize())
+                    .productImages(productImageResponses)
                     .price(productVariant.getPrice())
                     .originalPrice(productVariant.getOriginalPrice())
                     .discount(productVariant.getDiscount())
                     .build();
         }).toList();
-        return productVariantResponses;
 
     }
 }

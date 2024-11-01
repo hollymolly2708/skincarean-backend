@@ -46,6 +46,9 @@ public class ProductVariant {
     private List<CartItem> cartItems;
 
     @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private  List<OrderItem> orderItems;
+    private List<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> productImages;
 
 }

@@ -27,6 +27,5 @@ public class DetailProductResponse {
     private String categoryName;
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
-    private List<ProductImageResponse> productImages;
     private List<ProductVariantResponse> productVariants;
 }

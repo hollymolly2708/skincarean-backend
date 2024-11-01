@@ -30,6 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.skincareMall.skincareMall.mapper.ProductMapper.toDetailProductResponse;
+import static com.skincareMall.skincareMall.mapper.ProductMapper.toProductImageResponse;
 
 @Service
 public class ProductServiceImpl {
@@ -75,16 +76,6 @@ public class ProductServiceImpl {
         // Simpan product dan ambil kembali untuk memastikan ID sudah di-set
         productRepository.save(product);
 
-        if (createProductRequest.getProductImages() != null) {
-            // Membuat dan menyimpan ProductCategory yang terkait
-            for (CreateProductImageRequest createProductImageRequest : createProductRequest.getProductImages()) {
-                ProductImage productImage = new ProductImage();
-                productImage.setImageUrl(createProductImageRequest.getImageUrl());
-                productImage.setProduct(product);
-                productImageRepository.save(productImage);
-            }
-        }
-
         if (createProductRequest.getCreateProductVariantRequests() != null) {
             for (CreateProductVariantRequest createProductVariantRequest : createProductRequest.getCreateProductVariantRequests()) {
                 ProductVariant productVariant = new ProductVariant();
@@ -98,6 +89,15 @@ public class ProductServiceImpl {
                 productVariant.setDiscount(createProductVariantRequest.getDiscount());
                 productVariant.setPrice(createProductVariantRequest.getOriginalPrice().subtract(createProductVariantRequest.getOriginalPrice().multiply(createProductVariantRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
                 productVariantRepository.save(productVariant);
+
+
+                for (CreateProductImageRequest createProductImageRequest : createProductVariantRequest.getProductImages()) {
+                    ProductImage productImage = new ProductImage();
+                    productImage.setProductVariant(productVariant);
+                    productImage.setImageUrl(createProductImageRequest.getImageUrl());
+                    productImageRepository.save(productImage);
+                }
+
             }
         }
 
@@ -128,13 +128,15 @@ public class ProductServiceImpl {
 
     @Transactional(readOnly = true)
     public DetailProductResponse getDetailProduct(String productId) {
-        List<ProductImageResponse> productImageResponses = productImageRepository.findAllByProductId(productId).stream().map(ProductMapper::toProductImageResponse).toList();
+
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk tidak ditemukan"));
+
         List<ProductVariant> productVariants = productVariantRepository.findAllByProductId(productId);
+
 
         List<ProductVariantResponse> productVariantResponses = ProductMapper.productVariantsToProductVariantResponses(productVariants);
 
-        return toDetailProductResponse(product, productImageResponses, productVariantResponses);
+        return toDetailProductResponse(product, productVariantResponses);
     }
 
     @Transactional
@@ -167,34 +169,40 @@ public class ProductServiceImpl {
             product.setBpomCode(productRequest.getBpomCode());
             System.out.println(productRequest.getBpomCode());
         }
-        if (Objects.nonNull(productRequest.getProductImages())) {
-//            List<ProductImage> productImages = productRequest.getProductImages().stream().map(productImageRequest -> toProductImage(productImageRequest)).toList();
-            for (UpdateProductImageRequest updateProductImageRequest : productRequest.getProductImages()) {
-                ProductImage productImageByIdAndProductId = productImageRepository.findByIdAndProductId(updateProductImageRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk Image tidak ditemukan"));
-                if (productImageByIdAndProductId != null) {
-                    productImageByIdAndProductId.setImageUrl(updateProductImageRequest.getImageUrl());
-                    productImageRepository.save(productImageByIdAndProductId);
-                }
-
-            }
-            System.out.println(productRequest.getProductImages());
-        }
+//        if (Objects.nonNull(productRequest.getProductImages())) {
+////            List<ProductImage> productImages = productRequest.getProductImages().stream().map(productImageRequest -> toProductImage(productImageRequest)).toList();
+//            for (UpdateProductImageRequest updateProductImageRequest : productRequest.getProductImages()) {
+//                ProductImage productImageByIdAndProductId = productImageRepository.findByIdAndProductId(updateProductImageRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produk Image tidak ditemukan"));
+//                if (productImageByIdAndProductId != null) {
+//                    productImageByIdAndProductId.setImageUrl(updateProductImageRequest.getImageUrl());
+//                    productImageRepository.save(productImageByIdAndProductId);
+//                }
+//
+//            }
+//            System.out.println(productRequest.getProductImages());
+//        }
 
         if (Objects.nonNull(productRequest.getProductVariants())) {
             for (UpdateProductVariantRequest updateProductVariantRequest : productRequest.getProductVariants()) {
-                ProductVariant productVariant = productVariantRepository.findByIdAndProductId(updateProductVariantRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Varian dari produk tidak ditemukan"));
-                if (productVariant != null) {
-                    productVariant.setOriginalPrice(updateProductVariantRequest.getOriginalPrice());
-                    productVariant.setSize(updateProductVariantRequest.getSize());
-                    productVariant.setStok(updateProductVariantRequest.getStok());
-                    productVariant.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
-                    productVariant.setDiscount(updateProductVariantRequest.getDiscount());
-                    productVariant.setPrice(updateProductVariantRequest.getOriginalPrice().subtract(updateProductVariantRequest.getOriginalPrice().multiply(updateProductVariantRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
+                ProductVariant productVariant = productVariantRepository.findByIdAndProductId(updateProductVariantRequest.getId(), productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Varian dari produk tersebut tidak ditemukan"));
 
-                    productVariantRepository.save(productVariant);
+                productVariant.setOriginalPrice(updateProductVariantRequest.getOriginalPrice());
+                productVariant.setSize(updateProductVariantRequest.getSize());
+                productVariant.setStok(updateProductVariantRequest.getStok());
+                productVariant.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
+                productVariant.setDiscount(updateProductVariantRequest.getDiscount());
+                productVariant.setPrice(updateProductVariantRequest.getOriginalPrice().subtract(updateProductVariantRequest.getOriginalPrice().multiply(updateProductVariantRequest.getDiscount().divide(BigDecimal.valueOf(100)))));
 
+                productVariantRepository.save(productVariant);
 
+                if (updateProductVariantRequest.getProductImages() != null) {
+                    for (UpdateProductImageRequest updateProductImageRequest : updateProductVariantRequest.getProductImages()) {
+                        ProductImage productImage = productImageRepository.findByIdAndProductVariantId(updateProductImageRequest.getId(), updateProductVariantRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gambar tidak ditemukan"));
+                        productImage.setImageUrl(updateProductImageRequest.getImageUrl());
+                        productImageRepository.save(productImage);
+                    }
                 }
+
 
             }
         }
@@ -229,9 +237,8 @@ public class ProductServiceImpl {
         product.setLastUpdatedAt(Utilities.changeFormatToTimeStamp());
         productRepository.save(product);
 
-        List<ProductImageResponse> productImageResponse = product.getProductImages().stream().map(ProductMapper::toProductImageResponse).toList();
         List<ProductVariantResponse> productVariantResponses = ProductMapper.productVariantsToProductVariantResponses(productVariants);
-        return toDetailProductResponse(product, productImageResponse, productVariantResponses);
+        return toDetailProductResponse(product, productVariantResponses);
     }
 
     @Transactional(readOnly = true)

@@ -31,9 +31,6 @@ public class CreateProductRequest {
     @Size(max = 100)
     @NotBlank
     private String bpomCode;
-
-    @NotNull
-    private List<CreateProductImageRequest> productImages;
     @NotNull
     private List<CreateProductVariantRequest> createProductVariantRequests;
 

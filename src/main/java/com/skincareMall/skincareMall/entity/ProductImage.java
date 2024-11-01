@@ -19,9 +19,9 @@ public class ProductImage {
     private String imageUrl;
     @ManyToOne
     @JoinColumn(
-            name = "product_id",
+            name = "product_variant_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private Product product;
+    private ProductVariant productVariant;
 }

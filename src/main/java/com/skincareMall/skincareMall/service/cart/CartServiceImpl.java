@@ -111,6 +111,9 @@ public class CartServiceImpl implements CartService {
             BigDecimal itemSubTotal = cartItem.getProductVariant().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
             return CartItemResponse.builder()
                     .id(cartItem.getId())
+                    .quantity(cartItem.getQuantity())
+                    .total(itemSubTotal)
+                    .isActive(cartItem.getIsActive())
                     .product(CartProductResponse.builder()
                             .productName(cartItem.getProduct().getName())
                             .thumbnailImage(cartItem.getProduct().getThumbnailImage())
@@ -118,8 +121,6 @@ public class CartServiceImpl implements CartService {
                             .productId(cartItem.getProduct().getId())
                             .categoryName(cartItem.getProduct().getCategoryItem().getName())
                             .build())
-                    .total(itemSubTotal)
-                    .isActive(cartItem.getIsActive())
                     .productVariant(CartProductVariantResponse.builder()
                             .price(cartItem.getProductVariant().getPrice())
                             .size(cartItem.getProductVariant().getSize())
@@ -127,7 +128,7 @@ public class CartServiceImpl implements CartService {
                             .originalPrice(cartItem.getProductVariant().getOriginalPrice())
                             .id(cartItem.getProductVariant().getId())
                             .build())
-                    .quantity(cartItem.getQuantity())
+
                     .build();
         }).collect(Collectors.toList());
 
@@ -161,6 +162,9 @@ public class CartServiceImpl implements CartService {
 
             return CartItemResponse.builder()
                     .id(cartItem.getId())
+                    .total(itemSubTotal)
+                    .isActive(cartItem.getIsActive())
+                    .quantity(cartItem.getQuantity())
                     .product(CartProductResponse.builder()
                             .productName(cartItem.getProduct().getName())
                             .thumbnailImage(cartItem.getProduct().getThumbnailImage())
@@ -168,9 +172,6 @@ public class CartServiceImpl implements CartService {
                             .productId(cartItem.getProduct().getId())
                             .categoryName(cartItem.getProduct().getCategoryItem().getName())
                             .build())
-                    .total(itemSubTotal)
-                    .isActive(cartItem.getIsActive())
-                    .quantity(cartItem.getQuantity())
                     .productVariant(CartProductVariantResponse.builder()
                             .size(cartItem.getProductVariant().getSize())
                             .price(cartItem.getProductVariant().getPrice())

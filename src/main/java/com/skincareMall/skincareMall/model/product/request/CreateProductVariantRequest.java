@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +25,6 @@ public class CreateProductVariantRequest {
     @Digits(integer = 2, fraction = 0, message = "Discount harus berupa angka dengan maksimal 2 digit dan 0 desimal")
     private BigDecimal discount = BigDecimal.ZERO;
     private Long stok;
+    @NotNull
+    private List<CreateProductImageRequest> productImages;
 }
