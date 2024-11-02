@@ -1,7 +1,6 @@
 package com.skincareMall.skincareMall.model.product.response;
 
 
-import com.skincareMall.skincareMall.entity.ProductImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,11 +14,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 public class ProductVariantResponse {
+    private Long id;
     private String size;
     private Long stok;
     private BigDecimal price;
     private BigDecimal originalPrice;
     private BigDecimal discount;
-    private Long id;
-    private List<ProductImageResponse> productImages;
+    private String thumbnailVariantImage;
+    private List<ProductVariantImageResponse> productVariantImages;
 }

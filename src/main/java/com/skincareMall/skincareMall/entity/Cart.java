@@ -19,9 +19,6 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "total_price")
-    private BigDecimal totalPrice;
-    private Long quantity;
 
     @OneToOne
     @JoinColumn(name = "user_id",referencedColumnName = "username")

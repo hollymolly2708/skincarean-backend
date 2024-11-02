@@ -6,12 +6,9 @@ import com.skincareMall.skincareMall.model.cart.response.CartItemResponse;
 import com.skincareMall.skincareMall.model.cart.response.CartProductResponse;
 import com.skincareMall.skincareMall.model.cart.response.CartProductVariantResponse;
 import com.skincareMall.skincareMall.model.cart.response.CartResponse;
-import com.skincareMall.skincareMall.model.product.response.ProductResponse;
-import com.skincareMall.skincareMall.model.product.response.ProductVariantResponse;
 import com.skincareMall.skincareMall.repository.*;
 import com.skincareMall.skincareMall.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -31,26 +29,26 @@ public class CartServiceImpl implements CartService {
     private UserRepository userRepository;
     @Autowired
     private ValidationService validationService;
-
     @Autowired
     private CartItemRepository cartItemRepository;
-
     @Autowired
     private CartRepository cartRepository;
-
     @Autowired
     private ProductVariantRepository productVariantRepository;
+
 
     @Override
     @Transactional
     public void addProductToCart(User user, CreateCartRequest request) {
         validationService.validate(request);
         Cart cart = cartRepository.findByUserUsernameUser(user.getUsernameUser()).orElse(null);
+
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Tidak ditemukan"));
-        CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product).orElse(null);
 
         ProductVariant productVariant = productVariantRepository.findByIdAndProductId(request.getProductVariantId(), request.getProductId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Varian produk tidak ditemukan"));
+
+        CartItem cartItem = cartItemRepository.findByCartAndProductAndProductVariant(cart, product, productVariant).orElse(null);
 
 
         BigDecimal productTotal = productVariant.getPrice().multiply(BigDecimal.valueOf(request.getQuantity()));
@@ -58,18 +56,18 @@ public class CartServiceImpl implements CartService {
         if (cart == null) {
             Cart newCart = new Cart();
             newCart.setUser(user);
-            newCart.setQuantity(request.getQuantity());
-            newCart.setTotalPrice(productTotal);
             cartRepository.save(newCart);
 
+
             CartItem newCartItem = new CartItem();
-            newCartItem.setProduct(product);
+            newCartItem.setProductVariant(productVariant);
             newCartItem.setQuantity(request.getQuantity());
             newCartItem.setTotal(productTotal);
             newCartItem.setProductVariant(productVariant);
-            newCartItem.setCart(newCart);
             newCartItem.setIsActive(false);
+            newCartItem.setCart(cart);
             cartItemRepository.save(newCartItem);
+
 
         } else {
             if (cartItem == null) {
@@ -88,10 +86,6 @@ public class CartServiceImpl implements CartService {
                 cartItemRepository.save(cartItem);
             }
 
-            // Update total cart
-            cart.setQuantity(cart.getQuantity() + request.getQuantity());
-            cart.setTotalPrice(cart.getTotalPrice().add(productTotal));
-            cartRepository.save(cart);
         }
 
 
@@ -124,6 +118,7 @@ public class CartServiceImpl implements CartService {
                     .productVariant(CartProductVariantResponse.builder()
                             .price(cartItem.getProductVariant().getPrice())
                             .size(cartItem.getProductVariant().getSize())
+                            .thumbnailVariantImage(cartItem.getProductVariant().getThumbnailVariantImage())
                             .discount(cartItem.getProductVariant().getDiscount())
                             .originalPrice(cartItem.getProductVariant().getOriginalPrice())
                             .id(cartItem.getProductVariant().getId())
@@ -132,11 +127,13 @@ public class CartServiceImpl implements CartService {
                     .build();
         }).collect(Collectors.toList());
 
+        long totalQuantity = cartItemResponses.stream().mapToLong(CartItemResponse::getQuantity).sum();
+
         return CartResponse.builder()
                 .id(cart.getId())
                 .cartItems(cartItemResponses)
                 .totalPrice(totalPrice.get())
-                .quantity(cart.getQuantity())
+                .quantity(totalQuantity)
                 .build();
     }
 
@@ -145,14 +142,8 @@ public class CartServiceImpl implements CartService {
     public CartResponse getAllCarts(User user) {
         Cart cart = cartRepository.findByUserUsernameUser(user.getUsernameUser())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Keranjang tidak ditemukan"));
-        List<CartItem> cartItemByIsActive = cartItemRepository.findByCartAndIsActive(cart, true);
 
-        AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
-
-        cartItemByIsActive.forEach(cartItem -> {
-            totalPrice.updateAndGet(currentTotal -> currentTotal.add(cartItem.getTotal()));
-        });
-
+        List<CartItem> activeCartItem = cartItemRepository.findByCartAndIsActive(cart, true);
 
         List<CartItemResponse> cartItemResponses = cart.getCartItems().stream().map(cartItem -> {
 
@@ -175,6 +166,7 @@ public class CartServiceImpl implements CartService {
                     .productVariant(CartProductVariantResponse.builder()
                             .size(cartItem.getProductVariant().getSize())
                             .price(cartItem.getProductVariant().getPrice())
+                            .thumbnailVariantImage(cartItem.getProductVariant().getThumbnailVariantImage())
                             .originalPrice(cartItem.getProductVariant().getOriginalPrice())
                             .discount(cartItem.getProductVariant().getDiscount())
                             .id(cartItem.getProductVariant().getId())
@@ -182,11 +174,17 @@ public class CartServiceImpl implements CartService {
                     .build();
         }).collect(Collectors.toList());
 
+        BigDecimal totalPrice = activeCartItem.stream()
+                .map(CartItem::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        long totalQuantity = activeCartItem.stream().mapToLong(CartItem::getQuantity).sum();
+
+
         return CartResponse.builder()
                 .id(cart.getId())
                 .cartItems(cartItemResponses)
-                .totalPrice(totalPrice.get())
-                .quantity(cart.getQuantity())
+                .totalPrice(totalPrice)
+                .quantity(totalQuantity)
                 .build();
     }
 
@@ -212,11 +210,6 @@ public class CartServiceImpl implements CartService {
         cartItem.setTotal(newSubTotal);
         cartItemRepository.save(cartItem);
 
-        // Update cart total price and quantity
-        Cart cart = cartItem.getCart();
-        cart.setQuantity(cart.getQuantity() + 1);
-        cart.setTotalPrice(cart.getTotalPrice().add(cartItem.getProductVariant().getPrice()));
-        cartRepository.save(cart);
     }
 
 
@@ -227,11 +220,6 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item tidak ditemukan"));
 
         if (cartItem.getQuantity() <= 1) {
-            // Remove item if quantity is 1 or less
-            Cart cart = cartItem.getCart();
-            cart.setQuantity(cart.getQuantity() - 1);
-            cart.setTotalPrice(cart.getTotalPrice().subtract(cartItem.getProductVariant().getPrice()));
-            cartRepository.save(cart);
             cartItemRepository.delete(cartItem);
         } else {
             // Decrease quantity and update total
@@ -239,12 +227,6 @@ public class CartServiceImpl implements CartService {
             BigDecimal newSubTotal = cartItem.getProductVariant().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
             cartItem.setTotal(newSubTotal);
             cartItemRepository.save(cartItem);
-
-            // Update cart total price and quantity
-            Cart cart = cartItem.getCart();
-            cart.setQuantity(cart.getQuantity() - 1);
-            cart.setTotalPrice(cart.getTotalPrice().subtract(cartItem.getProductVariant().getPrice()));
-            cartRepository.save(cart);
         }
     }
 
@@ -254,11 +236,6 @@ public class CartServiceImpl implements CartService {
     public void deleteCartItemFromCart(User user, Long cartItemId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item tidak ditemukan"));
-
-        Cart cart = cartItem.getCart();
-        cart.setQuantity(cart.getQuantity() - cartItem.getQuantity());
-        cart.setTotalPrice(cart.getTotalPrice().subtract(cartItem.getTotal()));
-        cartRepository.save(cart);
         cartItemRepository.delete(cartItem);
     }
 
@@ -268,10 +245,6 @@ public class CartServiceImpl implements CartService {
     public void deleteAllCartItems(User user) {
         Cart cart = cartRepository.findByUserUsernameUser(user.getUsernameUser())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Keranjang tidak ditemukan"));
-
-        cart.setTotalPrice(BigDecimal.ZERO);
-        cart.setQuantity(0L);
         cartItemRepository.deleteAll(cart.getCartItems());
-        cartRepository.save(cart);
     }
 }

@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl {
+
     @Autowired
     private OrderItemRepository orderItemRepository;
     @Autowired
@@ -41,7 +42,6 @@ public class OrderServiceImpl {
     private CartRepository cartRepository;
     @Autowired
     private CartItemRepository cartItemRepository;
-
     @Autowired
     private ProductVariantRepository productVariantRepository;
 
@@ -241,6 +241,7 @@ public class OrderServiceImpl {
                                                                     .discount(orderItem.getProductVariant().getDiscount())
                                                                     .originalPrice(orderItem.getProductVariant().getOriginalPrice())
                                                                     .price(orderItem.getProductVariant().getPrice())
+                                                                    .thumbnailImageVariant(orderItem.getProductVariant().getThumbnailVariantImage())
                                                                     .size(orderItem.getProductVariant().getSize())
                                                                     .build())
                                                             .quantity(orderItem.getQuantity())
@@ -288,6 +289,7 @@ public class OrderServiceImpl {
                                                                 .size(orderItem.getProductVariant().getSize())
                                                                 .price(orderItem.getProductVariant().getPrice())
                                                                 .id(orderItem.getProductVariant().getId())
+                                                                .thumbnailImageVariant(orderItem.getProductVariant().getThumbnailVariantImage())
                                                                 .originalPrice(orderItem.getProductVariant().getOriginalPrice())
                                                                 .discount(orderItem.getProductVariant().getDiscount())
                                                                 .build())
@@ -348,6 +350,7 @@ public class OrderServiceImpl {
                                                         .productVariant(OrderProductVariantResponse.builder()
                                                                 .size(orderItem.getProductVariant().getSize())
                                                                 .price(orderItem.getProductVariant().getPrice())
+                                                                .thumbnailImageVariant(orderItem.getProductVariant().getThumbnailVariantImage())
                                                                 .discount(orderItem.getProductVariant().getDiscount())
                                                                 .originalPrice(orderItem.getProductVariant().getOriginalPrice())
                                                                 .id(orderItem.getProductVariant().getId())
@@ -393,6 +396,7 @@ public class OrderServiceImpl {
                                                         .price(orderItem.getTotalPrice())
                                                         .productVariant(OrderProductVariantResponse.builder()
                                                                 .size(orderItem.getProductVariant().getSize())
+                                                                .thumbnailImageVariant(orderItem.getProductVariant().getThumbnailVariantImage())
                                                                 .price(orderItem.getProductVariant().getPrice())
                                                                 .discount(orderItem.getProductVariant().getDiscount())
                                                                 .originalPrice(orderItem.getProductVariant().getOriginalPrice())
@@ -445,6 +449,7 @@ public class OrderServiceImpl {
                                     .size(orderItem.getProductVariant().getSize())
                                     .price(orderItem.getProductVariant().getPrice())
                                     .discount(orderItem.getProductVariant().getDiscount())
+                                    .thumbnailImageVariant(orderItem.getProductVariant().getThumbnailVariantImage())
                                     .originalPrice(orderItem.getProductVariant().getOriginalPrice())
                                     .id(orderItem.getProductVariant().getId())
                                     .build())
@@ -453,10 +458,11 @@ public class OrderServiceImpl {
                                     .productId(product.getId())
                                     .productName(product.getName())
                                     .brandName(product.getBrand().getName())
-                                    .thumbnailImage(product.getThumbnailImage())
-
+                                    .thumbnailImage(orderItem.getProductVariant().getThumbnailVariantImage())
                                     .categoryName(product.getCategoryItem().getName())
                                     .build())
+
+
                             .build();
                 }).toList())
 

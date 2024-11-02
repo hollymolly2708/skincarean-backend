@@ -25,6 +25,8 @@ public class CreateProductVariantRequest {
     @Digits(integer = 2, fraction = 0, message = "Discount harus berupa angka dengan maksimal 2 digit dan 0 desimal")
     private BigDecimal discount = BigDecimal.ZERO;
     private Long stok;
+    @NotBlank
+    private String thumbnailVariantImage;
     @NotNull
     private List<CreateProductImageRequest> productImages;
 }

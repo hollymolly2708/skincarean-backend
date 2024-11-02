@@ -18,6 +18,7 @@ public class CartProductVariantResponse {
     private BigDecimal price;
     private BigDecimal originalPrice;
     private BigDecimal discount;
+    private String thumbnailVariantImage;
     private Long id;
 
 }

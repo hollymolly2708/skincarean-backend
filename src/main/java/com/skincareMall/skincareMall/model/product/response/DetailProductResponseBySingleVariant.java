@@ -1,6 +1,5 @@
 package com.skincareMall.skincareMall.model.product.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,18 +12,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductResponse {
+public class DetailProductResponseBySingleVariant {
     private String productId;
     private String productName;
+    private String productDescription;
     private Boolean isPromo;
     private String thumbnailImage;
-    private Boolean isPopularProduct;
+    private String bpomCode;
+    private Long totalStok;
     private String brandName;
+    private Boolean isPopularProduct;
+    private String ingredient;
     private String categoryName;
-    private BigDecimal firstOriginalPrice;
-    private BigDecimal firstPrice;
-    private BigDecimal firstDiscount;
-    private BigDecimal minPrice;
-    private BigDecimal maxPrice;
+    private ProductVariantResponse productVariant;
 
 }

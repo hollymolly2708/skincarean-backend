@@ -20,6 +20,4 @@ public class OrderItemResponse {
     private Long quantity;
     private OrderProductResponse product;
     private OrderProductVariantResponse productVariant;
-
-
 }

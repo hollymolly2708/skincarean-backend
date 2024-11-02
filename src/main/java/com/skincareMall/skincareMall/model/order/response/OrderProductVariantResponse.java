@@ -18,5 +18,6 @@ public class OrderProductVariantResponse {
     private BigDecimal price;
     private BigDecimal originalPrice;
     private BigDecimal discount;
+    private String thumbnailImageVariant;
 
 }

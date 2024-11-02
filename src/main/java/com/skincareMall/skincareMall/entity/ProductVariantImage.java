@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "product_images")
-public class ProductImage {
+@Table(name = "product_variant_images")
+public class ProductVariantImage {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

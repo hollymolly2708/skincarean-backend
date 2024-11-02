@@ -6,6 +6,7 @@ import com.skincareMall.skincareMall.model.product.request.CreateProductRequest;
 import com.skincareMall.skincareMall.model.product.request.SearchProductRequest;
 import com.skincareMall.skincareMall.model.product.request.UpdateProductRequest;
 import com.skincareMall.skincareMall.model.product.response.DetailProductResponse;
+import com.skincareMall.skincareMall.model.product.response.DetailProductResponseBySingleVariant;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
 import com.skincareMall.skincareMall.service.product.ProductServiceImpl;
@@ -71,6 +72,12 @@ public class ProductController {
     public WebResponse<List<ProductResponse>> getAllPopularProducts() {
         List<ProductResponse> allPopularProducts = productServiceImpl.getAllPopularProducts();
         return WebResponse.<List<ProductResponse>>builder().data(allPopularProducts).build();
+    }
+
+    @GetMapping(path = "/api/products/{productId}/variants/{variantId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<DetailProductResponseBySingleVariant> getDetailProductByBrand(@PathVariable("productId") String productId, @PathVariable("variantId") Long variantId){
+        DetailProductResponseBySingleVariant detailProductByVariant = productServiceImpl.getDetailProductByVariant(productId, variantId);
+        return WebResponse.<DetailProductResponseBySingleVariant>builder().data(detailProductByVariant).build();
     }
 
 

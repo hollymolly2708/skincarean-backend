@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -18,7 +18,8 @@ import java.util.List;
 @Table(name = "product_variants")
 public class ProductVariant {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name="native",strategy = "native")
     private Long id;
 
     private String size;
@@ -28,6 +29,9 @@ public class ProductVariant {
     private BigDecimal discount;
 
     private Long stok;
+
+    @Column(name = "thumbnail_variant_image")
+    private  String thumbnailVariantImage;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -49,6 +53,6 @@ public class ProductVariant {
     private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> productImages;
+    private List<ProductVariantImage> productVariantImages;
 
 }

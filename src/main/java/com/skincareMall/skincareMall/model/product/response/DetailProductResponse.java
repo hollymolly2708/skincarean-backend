@@ -1,6 +1,5 @@
 package com.skincareMall.skincareMall.model.product.response;
 
-import com.skincareMall.skincareMall.entity.ProductImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

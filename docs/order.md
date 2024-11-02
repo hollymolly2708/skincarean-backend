@@ -120,7 +120,7 @@ Request Header :
       "discount": 25.00,
       "brands": "Skintific",
       "categoryItem": "Serum",
-      "productImage": [
+      "productVariantImage": [
         {
           "id": 4,
           "imageUrl": "skintific1.jpeg"

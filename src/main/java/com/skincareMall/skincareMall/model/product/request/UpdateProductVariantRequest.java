@@ -23,6 +23,7 @@ public class UpdateProductVariantRequest {
     @Digits(integer = 20, fraction = 2, message = "Harga harus berupa angka dengan maksimal 20 digit dan 2 desimal")
     @DecimalMin(value = "0.0", inclusive = false, message = "Harga harus lebih besar dari 0.0")
     private BigDecimal originalPrice;
+    private String thumbnailVariantImage;
     private List<UpdateProductImageRequest> productImages;
 
 }

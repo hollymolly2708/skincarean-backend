@@ -1,27 +1,25 @@
 package com.skincareMall.skincareMall.mapper;
 
 import com.skincareMall.skincareMall.entity.Product;
-import com.skincareMall.skincareMall.entity.ProductImage;
+import com.skincareMall.skincareMall.entity.ProductVariantImage;
 import com.skincareMall.skincareMall.entity.ProductVariant;
 import com.skincareMall.skincareMall.model.product.response.DetailProductResponse;
-import com.skincareMall.skincareMall.model.product.response.ProductImageResponse;
+import com.skincareMall.skincareMall.model.product.response.ProductVariantImageResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductVariantResponse;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductMapper {
     private ProductMapper() {
 
     }
 
-    public static ProductImageResponse toProductImageResponse(ProductImage productImage) {
-        return ProductImageResponse.builder()
-                .imageUrl(productImage.getImageUrl())
-                .id(productImage.getId())
+    public static ProductVariantImageResponse toProductImageResponse(ProductVariantImage productVariantImage) {
+        return ProductVariantImageResponse.builder()
+                .imageUrl(productVariantImage.getImageUrl())
+                .id(productVariantImage.getId())
                 .build();
     }
 
@@ -31,6 +29,9 @@ public class ProductMapper {
                 .productName(product.getName())
                 .isPromo(product.getIsPromo())
                 .isPopularProduct(product.getIsPopularProduct())
+                .firstOriginalPrice(product.getProductVariants().stream().map(ProductVariant::getOriginalPrice).findFirst().orElse(BigDecimal.ZERO))
+                .firstDiscount(product.getProductVariants().stream().map(ProductVariant::getDiscount).findFirst().orElse(BigDecimal.ZERO))
+                .firstPrice(product.getProductVariants().stream().map(ProductVariant::getPrice).findFirst().orElse(BigDecimal.ZERO))
                 .maxPrice(product.getProductVariants().stream()
                         .map(ProductVariant::getPrice) // Mengambil harga sebagai BigDecimal// Mengonversi BigDecimal ke double
                         .max(BigDecimal::compareTo) // Mendapatkan nilai maksimum
@@ -67,8 +68,8 @@ public class ProductMapper {
 
     public static List<ProductVariantResponse> productVariantsToProductVariantResponses(List<ProductVariant> productVariants) {
         return productVariants.stream().map(productVariant -> {
-            List<ProductImageResponse> productImageResponses = productVariant.getProductImages().stream().map(productImage ->
-                    ProductImageResponse.builder()
+            List<ProductVariantImageResponse> productVariantImageResponse = productVariant.getProductVariantImages().stream().map(productImage ->
+                    ProductVariantImageResponse.builder()
                             .id(productImage.getId())
                             .imageUrl(productImage.getImageUrl())
                             .build()
@@ -77,8 +78,9 @@ public class ProductMapper {
                     .id(productVariant.getId())
                     .stok(productVariant.getStok())
                     .size(productVariant.getSize())
-                    .productImages(productImageResponses)
+                    .productVariantImages(productVariantImageResponse)
                     .price(productVariant.getPrice())
+                    .thumbnailVariantImage(productVariant.getThumbnailVariantImage())
                     .originalPrice(productVariant.getOriginalPrice())
                     .discount(productVariant.getDiscount())
                     .build();
