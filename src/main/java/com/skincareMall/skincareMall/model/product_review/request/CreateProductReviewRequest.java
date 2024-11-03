@@ -16,7 +16,6 @@ public class CreateProductReviewRequest {
     @NotNull
     private Byte rating;
     @NotBlank
-    @Size(min = 200)
     private String review;
     @NotBlank
     @Size(max = 100)

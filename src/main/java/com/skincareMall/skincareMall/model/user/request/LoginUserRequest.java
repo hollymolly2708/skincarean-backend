@@ -1,6 +1,7 @@
 package com.skincareMall.skincareMall.model.user.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ public class LoginUserRequest {
     @Size(max = 100)
     private String username;
     @NotBlank
+    @NotNull
     @Size(max = 100)
     private String password;
 }

@@ -34,21 +34,18 @@ public class Product {
     @Column(name = "is_promo")
     private Boolean isPromo;
 
-    private String size;
+    @Column(name = "total_stok")
+    private Long totalStok;
 
-    private Long stok;
-
-    private BigDecimal price;
-
-    private BigDecimal discount;
+    @Column(name = "is_popular_product")
+    private Boolean isPopularProduct;
 
 
-    @Column(name = "original_price")
-    private BigDecimal originalPrice;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
-
+    @Column(name = "ingredient")
+    private String ingredient;
     @Column(name = "last_updated_at")
     private Timestamp lastUpdatedAt;
 
@@ -57,10 +54,9 @@ public class Product {
     private Admin admin;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders;
+    private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> productImages;
+
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductReview> productReviews;
@@ -70,7 +66,12 @@ public class Product {
     private Brand brand;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
+    @JoinColumn(name = "category_item_id", referencedColumnName = "id")
+    private CategoryItem categoryItem;
+
+    @OneToMany(mappedBy = "product")
+    private List<CartItem> cartItems;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductVariant> productVariants;
 
 }

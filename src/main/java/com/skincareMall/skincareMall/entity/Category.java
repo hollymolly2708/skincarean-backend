@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -13,20 +14,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "categories")
 @Entity
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String description;
-    @Column(name = "category_image")
-    private String categoryImage;
     @Column(name = "created_at")
     private Timestamp createdAt;
     @Column(name = "last_updated_at")
     private Timestamp lastUpdatedAt;
-    @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    @Column(name = "category_image")
+    private String categoryImage;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CategoryItem> categoryItems;
 }

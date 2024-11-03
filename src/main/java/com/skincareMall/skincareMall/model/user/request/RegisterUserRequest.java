@@ -13,24 +13,24 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RegisterUserRequest {
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 255)
     private String username;
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 255)
     private String password;
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 255)
     private String fullName;
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 255)
     private String address;
-    @Size(max = 100)
+    @Size(max = 255)
     private String email;
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 20)
     private String phone;
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 255)
     private String confirmPassword;
     @Size(max = 255)
     private String photoProfile;

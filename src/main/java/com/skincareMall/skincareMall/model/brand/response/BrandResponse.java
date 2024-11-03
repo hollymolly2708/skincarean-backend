@@ -23,5 +23,6 @@ public class BrandResponse {
     private String brandLogo;
     private String address;
     private Timestamp createdAt;
+    private Boolean isTopBrand;
     private Timestamp lastUpdatedAt;
 }

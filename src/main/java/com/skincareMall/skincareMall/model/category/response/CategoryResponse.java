@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,9 +15,9 @@ import java.sql.Timestamp;
 @Builder
 public class CategoryResponse {
     private Long id;
-    private String name;
-    private String description;
     private String categoryImage;
+    private String name;
     private Timestamp createdAt;
     private Timestamp lastUpdatedAt;
+
 }

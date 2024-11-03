@@ -4,7 +4,7 @@ import com.skincareMall.skincareMall.entity.User;
 import com.skincareMall.skincareMall.model.user.request.UpdateUserRequest;
 import com.skincareMall.skincareMall.model.user.response.UserResponse;
 import com.skincareMall.skincareMall.model.user.response.WebResponse;
-import com.skincareMall.skincareMall.service.user.UserService;
+import com.skincareMall.skincareMall.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @GetMapping(path = "/api/users/current-user", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<UserResponse> getUser(User user) {
-        return userService.getUser(user);
+        return userServiceImpl.getUser(user);
 
     }
 
@@ -36,7 +36,7 @@ public class UserController {
         updateUserRequest.setPhone(phone);
         updateUserRequest.setEmail(email);
         updateUserRequest.setFullName(fullName);
-        return userService.updateUser(user, updateUserRequest);
+        return userServiceImpl.updateUser(user, updateUserRequest);
 
 
     }

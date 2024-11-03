@@ -1,5 +1,6 @@
 package com.skincareMall.skincareMall.model.order.response;
 
+import com.skincareMall.skincareMall.entity.OrderItem;
 import com.skincareMall.skincareMall.entity.PaymentProcess;
 import com.skincareMall.skincareMall.model.payment_process.response.PaymentProcessResponse;
 import com.skincareMall.skincareMall.model.product.response.ProductResponse;
@@ -18,15 +19,12 @@ import java.util.List;
 @Data
 public class OrderResponse {
     private String orderId;
-    private String productId;
-    private String shippingAddress;
-    private Long quantity;
+    private String orderStatus;
+    private BigDecimal finalPrice;
     private String description;
     private BigDecimal shippingCost;
+    private String shippingAddress;
     private BigDecimal tax;
-    private BigDecimal totalPrice;
-    private Timestamp createdAt;
-    private Timestamp expiredAt;
-    private ProductResponse product;
+    private List<OrderItemResponse> orderItems;
     private PaymentProcessResponse payment;
 }

@@ -17,7 +17,7 @@ public class ProductReviewResponse {
     //user didapatkan dari table product_review dengan column user_id
     private String fullNameUser;
     private String photoProfileUser;
-
+    private Long reviewId;
 
     //review diambil dari table product_review
     private String review;

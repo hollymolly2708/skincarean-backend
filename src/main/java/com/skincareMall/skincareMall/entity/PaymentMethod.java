@@ -20,6 +20,7 @@ public class PaymentMethod {
     private Long id;
     private String name;
     private String image;
+    private  String description;
     @OneToMany(mappedBy = "paymentMethod", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentProcess> paymentProcesses;
 }

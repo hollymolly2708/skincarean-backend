@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "product_images")
-public class ProductImage {
+@Table(name = "product_variant_images")
+public class ProductVariantImage {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +19,9 @@ public class ProductImage {
     private String imageUrl;
     @ManyToOne
     @JoinColumn(
-            name = "product_id",
+            name = "product_variant_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private Product product;
+    private ProductVariant productVariant;
 }

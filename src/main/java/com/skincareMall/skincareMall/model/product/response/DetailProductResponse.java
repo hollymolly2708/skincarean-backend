@@ -1,6 +1,5 @@
 package com.skincareMall.skincareMall.model.product.response;
 
-import com.skincareMall.skincareMall.entity.ProductImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,12 +19,12 @@ public class DetailProductResponse {
     private Boolean isPromo;
     private String thumbnailImage;
     private String bpomCode;
-    private String size;
-    private Long stok;
-    private BigDecimal originalPrice;
-    private BigDecimal price;
-    private BigDecimal discount;
+    private Long totalStok;
     private String brandName;
+    private Boolean isPopularProduct;
+    private String ingredient;
     private String categoryName;
-    private List<ProductImageResponse> productImage;
+    private BigDecimal minPrice;
+    private BigDecimal maxPrice;
+    private List<ProductVariantResponse> productVariants;
 }

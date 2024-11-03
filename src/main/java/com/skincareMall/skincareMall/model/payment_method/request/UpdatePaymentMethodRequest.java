@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UpdatePaymentMethodRequest {
     private String name;
+    private String image;
+    private String description;
 }

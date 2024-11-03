@@ -18,4 +18,6 @@ public class CreatePaymentMethodRequest {
     @NotBlank
     @Size(max = 255)
     private String image;
+    @Size(max = 255)
+    private String description;
 }

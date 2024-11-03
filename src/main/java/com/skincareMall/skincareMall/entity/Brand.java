@@ -40,4 +40,6 @@ public class Brand {
     private Timestamp lastUpdatedAt;
     @OneToMany(mappedBy = "brand")
     private List<Product> products;
+    @Column(name = "is_top_brand")
+    private Boolean isTopBrand;
 }
