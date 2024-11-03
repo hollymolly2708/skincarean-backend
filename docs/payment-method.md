@@ -12,8 +12,11 @@ Request Body :
 
 ```json
 {
-  "name" : "Indomaret"
+  "name": "Shopee",
+  "image": "https://drive.google.com/uc?export=view&id=1ncM-_BLSof9iSH6B_WQqtb2MePjtl4q8",
+  "description": "Pembayaran menggunakan Shopee."
 }
+
 ```
 
 Response Body (Success) :
@@ -22,7 +25,9 @@ Response Body (Success) :
 {
   "data": {
     "id": "1",
-    "name": "Indomaret"
+    "name": "Indomaret",
+    "image": "https://drive.google.com/uc?export=view&id=1ncM-_BLSof9iSH6B_WQqtb2MePjtl4q8",
+    "description": "Pembayaran menggunakan Shopee."
   }
   
 }
@@ -106,13 +111,16 @@ Request Header :
   "data": [
     {
       "id": "1",
-      "name": "Indomaret"
+      "name": "Indomaret",
+      "image": "https://drive.google.com/uc?export=view&id=1ncM-_BLSof9iSH6B_WQqtb2MePjtl4q8",
+      "description": "Pembayaran menggunakan Indomaret."
     },
     {
       "id": "2",
-      "name": "BRI"
+      "name": "BRI",
+      "image": "https://drive.google.com/uc?export=view&id=1ncM-_BLSof9iSH6B_WQqtb2MePjtl4q8",
+      "description": "Pembayaran menggunakan BRI."
     }
-    
   ]
 }
 ```

@@ -28,7 +28,7 @@ import static com.skincareMall.skincareMall.mapper.ProductMapper.toDetailProduct
 
 @Service
 @Slf4j
-public class ProductServiceImpl {
+public class ProductServiceImpl  implements ProductService{
     @Autowired
     private ValidationService validationService;
     @Autowired

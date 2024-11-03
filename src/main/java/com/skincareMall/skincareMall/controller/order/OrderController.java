@@ -26,7 +26,7 @@ public class OrderController {
         return WebResponse.<Map<String, Object>>builder().data(stringObjectMap).isSuccess(true).build();
     }
 
-    @PostMapping(path = "/api/orders/cart/checkout", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/orders/checkout/cart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<Map<String, Object>> addOrderFromCart(User user, @RequestBody CartOrderRequest cartOrderRequest) {
         Map<String, Object> stringObjectMap = orderServiceImpl.checkoutFromCart(user, cartOrderRequest);
 

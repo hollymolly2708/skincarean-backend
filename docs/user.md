@@ -66,6 +66,41 @@ Response Body (Failed) :
 }
 ```
 
+## LOGIN VIA GOOGLE
+
+Endpoint : POST /api/users/auth/login/google/verify
+
+Request body : 
+
+```json
+{
+  "token" : "asdjkioasjkdiojasodoasdko"
+}
+```
+
+Response Body (Success) :
+
+```json
+{
+  "data": {
+    "token": "52fec7fc-eb03-44b7-8a05-78096fe4ba16",
+    "tokenExpiredAt": 1730700513192,
+    "tokenCreatedAt": 1730657313192
+  },
+  "errors": null,
+  "paging": null,
+  "isSuccess": true
+}
+```
+
+Response Body (Failed) : 
+
+```json
+{
+  "errors" : "Unauthorized"
+}
+```
+
 ## LOGOUT
 
 Endpoint : DELETE /api/users/auth/logout
