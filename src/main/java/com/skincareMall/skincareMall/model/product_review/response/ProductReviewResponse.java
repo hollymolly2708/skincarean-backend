@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.Time;
 
 import java.sql.Timestamp;
 

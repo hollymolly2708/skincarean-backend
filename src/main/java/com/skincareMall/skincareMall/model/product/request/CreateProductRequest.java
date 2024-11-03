@@ -32,6 +32,6 @@ public class CreateProductRequest {
     @NotBlank
     private String bpomCode;
     @NotNull
-    private List<CreateProductVariantRequest> productVariantRequests;
+    private List<CreateProductVariantRequest> productVariants;
 
 }

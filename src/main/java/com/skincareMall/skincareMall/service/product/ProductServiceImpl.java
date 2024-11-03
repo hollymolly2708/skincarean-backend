@@ -71,8 +71,8 @@ public class ProductServiceImpl {
         // Simpan product dan ambil kembali untuk memastikan ID sudah di-set
         productRepository.save(product);
 
-        if (createProductRequest.getProductVariantRequests() != null) {
-            for (CreateProductVariantRequest createProductVariantRequest : createProductRequest.getProductVariantRequests()) {
+        if (createProductRequest.getProductVariants() != null) {
+            for (CreateProductVariantRequest createProductVariantRequest : createProductRequest.getProductVariants()) {
                 ProductVariant productVariant = new ProductVariant();
                 productVariant.setProduct(product);
                 productVariant.setCreatedAt(Utilities.changeFormatToTimeStamp());

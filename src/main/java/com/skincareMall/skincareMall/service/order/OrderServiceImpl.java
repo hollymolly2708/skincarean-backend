@@ -8,8 +8,6 @@ import com.skincareMall.skincareMall.model.order.response.OrderProductResponse;
 import com.skincareMall.skincareMall.model.order.response.OrderProductVariantResponse;
 import com.skincareMall.skincareMall.model.order.response.OrderResponse;
 import com.skincareMall.skincareMall.model.payment_process.response.PaymentProcessResponse;
-import com.skincareMall.skincareMall.model.product.response.ProductResponse;
-import com.skincareMall.skincareMall.model.product.response.ProductVariantResponse;
 import com.skincareMall.skincareMall.repository.*;
 import com.skincareMall.skincareMall.utils.Utilities;
 import com.skincareMall.skincareMall.validation.ValidationService;
@@ -20,11 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderServiceImpl {
+public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
@@ -45,7 +46,7 @@ public class OrderServiceImpl {
     @Autowired
     private ProductVariantRepository productVariantRepository;
 
-
+    @Override
     @Transactional
     public Map<String, Object> directlyCheckout(User user, DirectlyOrderRequest request) {
         // Validasi input
@@ -119,7 +120,7 @@ public class OrderServiceImpl {
         return response;
     }
 
-
+    @Override
     @Transactional
     public Map<String, Object> checkoutFromCart(User user, CartOrderRequest cartOrderRequest) {
 
@@ -195,7 +196,7 @@ public class OrderServiceImpl {
         return response;
     }
 
-
+    @Override
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders(User user) {
         List<Order> orders = orderRepository.findByUserUsernameUser(user.getUsernameUser());
@@ -253,6 +254,7 @@ public class OrderServiceImpl {
 
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllPendingOrders(User user) {
         List<Order> orders = orderRepository.findByUserUsernameUserAndOrderStatus(user.getUsernameUser(), "Menunggu pembayaran");
@@ -301,6 +303,7 @@ public class OrderServiceImpl {
 
     }
 
+    @Override
     @Transactional
     public void cancelOrder(User user, String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order tidak ditemukan"));
@@ -316,6 +319,7 @@ public class OrderServiceImpl {
         orderRepository.save(order);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllCanceledOrders(User user) {
         List<Order> orders = orderRepository.findByUserUsernameUserAndOrderStatus(user.getUsernameUser(), "Dibatalkan");
@@ -362,6 +366,7 @@ public class OrderServiceImpl {
                 .toList();
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllCompletedOrders(User user) {
         List<Order> orders = orderRepository.findByUserUsernameUserAndOrderStatus(user.getUsernameUser(), "Selesai");
@@ -410,12 +415,13 @@ public class OrderServiceImpl {
 
     }
 
-
+    @Override
     @Transactional
     public void deleteOrder(User user, String orderId) {
         orderRepository.deleteById(orderId);
     }
 
+    @Override
     @Transactional
     public OrderResponse getDetailOrder(User user, String orderId) {
 
