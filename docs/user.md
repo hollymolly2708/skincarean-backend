@@ -8,12 +8,12 @@ REQUEST BODY :
 
 ```json
 {
-  "username": "fiqriturhamz",
-  "password": "rahasia123",
-  "confirm_password": "rahasia123",
+  "username": "fiqri",
+  "password": "password",
+  "confirm_password": "password",
   "fullName": "Muhammad Fiqri Turham",
-  "address": "TCP Blok E5 no 6",
-  "email": "tmuhammadfiqri@gmail.com",
+  "address": "Dimana ya",
+  "email": "fiqri@gmail.com",
   "phone": "0823923232"
 }
 ```
@@ -42,8 +42,8 @@ Request Body :
 
 ```json
 {
-  "username": "fiqriturhamz",
-  "password": "rahasia123"
+  "username": "fiqri",
+  "password": "password"
 }
 ```
 
@@ -137,13 +137,13 @@ Response Body (Success) :
 
 ```json
 {
-  "username": "fiqriturhamz",
+  "username": "fiqri",
   "fullName": "Muhammad Fiqri Turham",
-  "email": "tmuhammadfiqri@gmail.com",
+  "email": "fiqri@gmail.com",
   "created_at": "27/08/2000 22:10:05",
   "updated_at": "27/08/2000 22:10:05",
   "phone": "082323232",
-  "address": "TCP BLOK E5 No 6"
+  "address": "dimana ya?"
 }
 ```
 
@@ -193,9 +193,9 @@ Request Body :
 ```json
 {
   "fullName": "Muhammad Fiqri Turham new",
-  "email": "tmuhammadfiqri@gmail.com",
+  "email": "fiqri@gmail.com",
   "phone": "082323232",
-  "address": "TCP BLOK E5 NO 6 new"
+  "address": "dimana ya new"
 }
 ```
 
@@ -203,13 +203,13 @@ Response Body (Success) :
 
 ```json
 {
-  "username": "fiqriturhamz",
+  "username": "fiqri",
   "fullName": "Muhammad Fiqri Turham new",
-  "email": "tmuhammadfiqri@gmail.com",
+  "email": "fiqri@gmail.com",
   "phone": "082323232",
   "created_at": "27/08/2000 22:10:05",
   "updated_at": "29/08/2000 22:10:05",
-  "address": "TCP BLOK E5 NO 6 new"
+  "address": "dimana ya new"
 }
 ```
 
