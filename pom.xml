@@ -8,11 +8,11 @@
 		<version>3.3.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.skincareMall</groupId>
-	<artifactId>skincareMall</artifactId>
+	<groupId>com.skincarean</groupId>
+	<artifactId>skincarean</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>skincareMall</name>
-	<description>skincareMart project</description>
+	<name>skincarean</name>
+	<description>skincarean project</description>
 	<url/>
 	<licenses>
 		<license/>
