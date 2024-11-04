@@ -24,9 +24,9 @@ Optimize with lombok to reduce boilerplate code, this project is packaged as a W
 
 * Authentication and Authorization :
 
-   * To handle authentication and authorization, im use JWT token. So whenever user login using simple login or with google. Backend would be send the JWT Token for the frontend.
+   * To handle authentication and authorization, i use JWT token. So whenever user login using simple login or with google. Backend would be send the JWT Token for the frontend.
      And the token will be used by frontend in the request header. So, to access the feature like cart and order. User only needed to send request to backend accompanied by JWT TOKEN which is in the request header and some request body if there are.
-     So the backend will validate, is the user valid or not. Whenever user is'nt valid, the backend will be sent 401 response code that means "Unauthorized". And this is not only for login but whenever user wanna to access the feature of this application.
+     So the backend will validate, is the user valid or not. Whenever user is'nt valid, the backend will be sent 401 response code that means "Unauthorized". And this is not only for login but whenever user wanna to access the feature of this application that need authorization.
 
 
 * Deployment: Packaged as a WAR file, suitable for deployment on any servlet container like Apache Tomcat.
@@ -75,23 +75,22 @@ Optimize with lombok to reduce boilerplate code, this project is packaged as a W
 
 ## PATH TO API SPECS
 
-- **User API SPEC Path**: `[user][docs/users.md]`
+- **User API SPEC Path**: `[User][docs/users.md]`
 
-- **Admin API SPEC Path**: `[admin][docs/admin.md]`
+- **Admin API SPEC Path**: `[Admin][docs/admin.md]`
 
-- **Product API SPEC Path**: `[admin][docs/product.md]`
+- **Product API SPEC Path**: `[Product][docs/product.md]` 
+- **Payment Method API SPEC Path**: `[Payment][docs/payment-method.md]`  
 
-- **Payment Method API SPEC Path**: `[admin][docs/payment-method.md]`
+- **Brand API SPEC Path**: `[Brand][docs/brand.md]`  
 
-- **Brand API SPEC Path**: `[admin][docs/brand.md]`
+- **Category API SPEC Path**: `[Category][docs/category.md]`
 
-- **Category API SPEC Path**: `[admin][docs/category.md]`
+- **Cart API SPEC Path**: `[Cart][docs/cart.md]`
 
-- **Cart API SPEC Path**: `[admin][docs/cart.md]`
+- **Order API SPEC Path**: `[Order][docs/order.md]` 
 
-- **Order API SPEC Path**: `[admin][docs/order.md]`
-
-- **Payment API SPEC Path**: `[admin][docs/payment.md]`
+- **Payment API SPEC Path**: `[Payment][docs/payment.md]` 
 
 
 
