@@ -1,7 +1,7 @@
 ## SKINCAREAN
 
 Skincarean is an online shopping project which has been built from scratch by me used Java spring boot Framework. This web application provides an API
-that would be used by front end such as Android.
+that would be used by front end such as Android, web, and many more.
 
 The backend used Spring boot, and the project use MVC architecture, Spring Data JPA for Efficient database using MySQL.
 Optimize with lombok to reduce boilerplate code, this project is packaged as a WAR file for easy deployment on any servlet container, like Apache Tomcat.
