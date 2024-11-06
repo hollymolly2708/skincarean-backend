@@ -443,6 +443,7 @@ public class OrderServiceImpl implements OrderService {
                         .build())
                 .finalPrice(order.getTotalPrice())
                 .tax(order.getTax())
+
                 .shippingCost(order.getShippingCost())
                 .shippingAddress(order.getShippingAddress())
                 .description(order.getDescription())

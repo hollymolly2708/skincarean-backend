@@ -92,6 +92,11 @@ Optimize with lombok to reduce boilerplate code, this project is packaged as a W
 - **Payment API SPEC Path**: `[Payment][docs/payment.md]` 
 
 
+## DATABASE RELATION
+
+<img src="./image/skincarean_database-relation.png" alt ="Database Relation" width ="100%" height="20%" />
+
+
 
 
      
